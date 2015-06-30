@@ -1,26 +1,29 @@
 package com.example.era.kakei;
 
 import android.app.Activity;
+import android.content.ClipData;
 import android.content.ContentValues;
-import android.database.Cursor;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Rect;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
-import android.view.Gravity;
+import android.util.Log;
+import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+import java.util.Calendar;
 
 
 public class MainActivity extends ActionBarActivity
@@ -32,8 +35,14 @@ public class MainActivity extends ActionBarActivity
     private SQLiteDatabase db;
     private Database helper;
     private ContentValues values;
-    private Cursor c;
     EditText price;
+    TextView food;
+    TextView social;
+    TextView recreation;
+    TextView shopping;
+    //当たり判定これらで取得しようとしたけどそれぞれにsetOnDragListenerセットした方が楽だったのでお蔵入り
+    //Rect rect = new Rect();
+    //int x,y;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,9 +52,25 @@ public class MainActivity extends ActionBarActivity
         price=(EditText)findViewById(R.id.editText);
         helper=new Database(getApplicationContext());
         db=helper.getWritableDatabase();
+        food=(TextView)findViewById(R.id.food);
+        social=(TextView)findViewById(R.id.social);
+        recreation=(TextView)findViewById(R.id.recreation);
+        shopping=(TextView)findViewById(R.id.shopping);
+        values = new ContentValues();
 
-        MyLongClickListener listener=new MyLongClickListener();
-        price.setOnLongClickListener(listener);
+
+        price.setOnLongClickListener(new View.OnLongClickListener(){
+            @Override
+            public boolean onLongClick(View v){
+                //ClipData clipData = ClipData.newPlainText("String",MainActivity.price.getText().toString());
+                //ドラッグ中に表示するイメージのビルダー
+                View.DragShadowBuilder shadow = new View.DragShadowBuilder(v);
+                //ドラッグを開始
+                v.startDrag(null,shadow,v,0);
+                return true;
+            }
+        });
+
 
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
@@ -56,6 +81,183 @@ public class MainActivity extends ActionBarActivity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+
+        food.setOnDragListener(new View.OnDragListener() {
+            @Override
+            public boolean onDrag(View v, DragEvent event) {
+                //final int action = event.getAction();     intでもできることの確認
+                switch (event.getAction()) {
+                    case DragEvent.ACTION_DRAG_STARTED:
+                    case DragEvent.ACTION_DRAG_ENTERED:
+                    case DragEvent.ACTION_DRAG_LOCATION:
+                    case DragEvent.ACTION_DRAG_EXITED:
+                        return true;
+
+                    case DragEvent.ACTION_DROP:
+                        /*んにゃぴ・・・ClipData使い所よくわかんなかったです・・・
+                        ClipData data = event.getClipData();
+                        String texData = String.valueOf(data);
+                        */
+
+                        /*元座標取得用
+                        x = (int) event.getX();
+                        y = (int) event.getY();
+                        */
+
+                        //textView.setText("test");     デバッグ用
+                        final Calendar calendar = Calendar.getInstance();
+                        final int year = calendar.get(Calendar.YEAR);
+                        final int month = calendar.get(Calendar.MONTH);
+                        final int day = calendar.get(Calendar.DAY_OF_MONTH);
+                        String date = year + "年" + (month+1) + "月" + day + "日";
+                        values.put(Database.DATE,date);
+                        values.put(Database.CATEGORY, "食費");
+                        values.put(Database.PRICE, price.getText().toString());
+                        long id=db.insert(
+                                Database.TABLE,
+                                null,
+                                values
+                        );
+                        Log.d(null,"insert:"+id);
+                        Toast.makeText(MainActivity.this,"保存完了:"+date,Toast.LENGTH_SHORT).show();
+                        return true;
+
+                    default:
+                        break;
+                }
+
+                return false;
+            }
+        });
+
+        social.setOnDragListener(new View.OnDragListener() {
+            @Override
+            public boolean onDrag(View v, DragEvent event) {
+                switch (event.getAction()) {
+                    case DragEvent.ACTION_DRAG_STARTED:
+                    case DragEvent.ACTION_DRAG_ENTERED:
+                    case DragEvent.ACTION_DRAG_LOCATION:
+                    case DragEvent.ACTION_DRAG_EXITED:
+                        return true;
+
+                    case DragEvent.ACTION_DROP:
+
+                        final Calendar calendar = Calendar.getInstance();
+                        final int year = calendar.get(Calendar.YEAR);
+                        final int month = calendar.get(Calendar.MONTH);
+                        final int day = calendar.get(Calendar.DAY_OF_MONTH);
+                        String date = year + "年" + (month+1) + "月" + day + "日";
+                        values.put(Database.DATE,date);
+                        values.put(Database.CATEGORY,"交際費");
+                        values.put(Database.PRICE, price.getText().toString());
+                        long id=db.insert(
+                                Database.TABLE,
+                                null,
+                                values
+                        );
+                        Toast.makeText(MainActivity.this,"保存完了:"+date,Toast.LENGTH_SHORT).show();
+                        Log.d(null,"insert:"+id);
+                        return true;
+
+                    default:
+                        break;
+                }
+
+                return false;
+            }
+        });
+
+        recreation.setOnDragListener(new View.OnDragListener() {
+            @Override
+            public boolean onDrag(View v, DragEvent event) {
+                switch (event.getAction()) {
+                    case DragEvent.ACTION_DRAG_STARTED:
+                    case DragEvent.ACTION_DRAG_ENTERED:
+                    case DragEvent.ACTION_DRAG_LOCATION:
+                    case DragEvent.ACTION_DRAG_EXITED:
+                        return true;
+
+                    case DragEvent.ACTION_DROP:
+
+                        final Calendar calendar = Calendar.getInstance();
+                        final int year = calendar.get(Calendar.YEAR);
+                        final int month = calendar.get(Calendar.MONTH);
+                        final int day = calendar.get(Calendar.DAY_OF_MONTH);
+                        String date = year + "年" + (month+1) + "月" + day + "日";
+                        values.put(Database.DATE,date);
+                        values.put(Database.CATEGORY,"娯楽費");
+                        values.put(Database.PRICE, price.getText().toString());
+                        long id=db.insert(
+                                Database.TABLE,
+                                null,
+                                values
+                        );
+                        Toast.makeText(MainActivity.this,"保存完了:"+date,Toast.LENGTH_SHORT).show();
+                        Log.d(null,"insert:"+id);
+
+                        return true;
+
+                    default:
+                        break;
+                }
+
+                return false;
+            }
+        });
+
+        shopping.setOnDragListener(new View.OnDragListener() {
+            @Override
+            public boolean onDrag(View v, DragEvent event) {
+                switch (event.getAction()) {
+                    case DragEvent.ACTION_DRAG_STARTED:
+                    case DragEvent.ACTION_DRAG_ENTERED:
+                    case DragEvent.ACTION_DRAG_LOCATION:
+                    case DragEvent.ACTION_DRAG_EXITED:
+                        return true;
+
+                    case DragEvent.ACTION_DROP:
+
+                        final Calendar calendar = Calendar.getInstance();
+                        final int year = calendar.get(Calendar.YEAR);
+                        final int month = calendar.get(Calendar.MONTH);
+                        final int day = calendar.get(Calendar.DAY_OF_MONTH);
+                        String date = year + "年" + (month+1) + "月" + day + "日";
+                        values.put(Database.DATE,date);
+                        values.put(Database.CATEGORY, "買い物費");
+                        values.put(Database.PRICE, price.getText().toString());
+                        long id=db.insert(
+                                Database.TABLE,
+                                null,
+                                values
+                        );
+                        Toast.makeText(MainActivity.this,"保存完了:"+date,Toast.LENGTH_SHORT).show();
+                        Log.d(null,"insert:"+id);
+                        return true;
+
+                    default:
+                        break;
+                }
+
+                return false;
+            }
+        });
+
+        price.setOnDragListener(new View.OnDragListener() {
+            @Override
+            public boolean onDrag(View v, DragEvent event) {
+                switch (event.getAction()) {
+                    case DragEvent.ACTION_DRAG_STARTED:
+                    case DragEvent.ACTION_DRAG_ENTERED:
+                    case DragEvent.ACTION_DRAG_LOCATION:
+                    case DragEvent.ACTION_DRAG_EXITED:
+                    case DragEvent.ACTION_DROP:
+                        return true;
+                    default:
+                        break;
+                }
+                return false;
+            }
+        });
     }
 
     @Override
@@ -70,14 +272,15 @@ public class MainActivity extends ActionBarActivity
     public void onSectionAttached(int number) {
         switch (number) {
             case 1:
-                mTitle = getString(R.string.title_section1);
+                mTitle=getString(R.string.app_name);
                 break;
             case 2:
-                mTitle = getString(R.string.title_section2);
+                Intent i = new Intent(MainActivity.this,AccountList.class);
+                startActivity(i);
                 break;
-            case 3:
-                mTitle = getString(R.string.title_section3);
-                break;
+            //case 3:
+                //mTitle = getString(R.string.title_section3);
+                //break;
         }
     }
 

@@ -1,14 +1,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.example.era.kakei.AccountList">
+    tools:context="com.example.era.kakei.DataActivity">
     <item android:id="@+id/action_settings" android:title="@string/action_settings"
         android:orderInCategory="100" app:showAsAction="never" />
-
     <item
-        android:id="@+id/sort"
-        android:title="ソート"
-        android:icon="@android:drawable/ic_menu_edit"
+        android:id="@+id/save"
+        android:title="save"
+        android:icon="@android:drawable/ic_menu_save"
         android:orderInCategory="100"
         app:showAsAction="ifRoom"
         />

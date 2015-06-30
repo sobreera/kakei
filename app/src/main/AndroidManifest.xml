@@ -20,6 +20,10 @@
             android:name=".AccountList"
             android:label="@string/title_activity_account_list" >
         </activity>
+        <activity
+            android:name=".DataActivity"
+            android:label="@string/title_activity_data" >
+        </activity>
     </application>
 
 </manifest>

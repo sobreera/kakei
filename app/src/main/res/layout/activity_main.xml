@@ -15,6 +15,45 @@
             android:id="@+id/editText"
             android:hint="数値を入力してください"
             android:layout_gravity="center" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="食費"
+            android:gravity="center"
+            android:id="@+id/food"
+            android:layout_gravity="center_vertical|top" />
+
+        <TextView
+            android:layout_width="60dp"
+            android:layout_height="450dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="交\n際\n費"
+            android:gravity="center"
+            android:id="@+id/social"
+            android:layout_gravity="center_vertical|right|top"
+            android:layout_marginTop="60dp" />
+
+        <TextView
+            android:layout_width="60dp"
+            android:layout_height="450dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="娯\n楽"
+            android:gravity="center"
+            android:id="@+id/recreation"
+            android:layout_gravity="left|top"
+            android:layout_marginTop="60dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="買い物費"
+            android:gravity="center"
+            android:id="@+id/shopping"
+            android:layout_gravity="center_horizontal|bottom" />
+
     </FrameLayout>
 
     <!-- android:layout_gravity="start" tells DrawerLayout to treat
