@@ -12,6 +12,8 @@ public class GraphActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_graph);
+
+        //グラフ作成用にActivity作成したもののまだよくわかってないので作っただけ状態
     }
 
     @Override
