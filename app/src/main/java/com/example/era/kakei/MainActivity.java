@@ -105,18 +105,14 @@ public class MainActivity extends ActionBarActivity
                         */
 
                         //textView.setText("test");     デバッグ用
-                        /*
+
                         final Calendar calendar = Calendar.getInstance();
                         final int year = calendar.get(Calendar.YEAR);
                         final int month = calendar.get(Calendar.MONTH);
                         final int day = calendar.get(Calendar.DAY_OF_MONTH);
                         String date = year + "-" + (month+1) + "-" + day + "-";
                         values.put(Database.DATE,date);
-                        */
-                        String date = "insert int table "+
-                                "(date) "+
-                                "values(datetime('now'));";
-                        db.execSQL(date);
+
                         values.put(Database.CATEGORY, food.getText().toString());
                         values.put(Database.PRICE, price.getText().toString());
                         long id=db.insert(
