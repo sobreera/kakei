@@ -28,6 +28,10 @@
             android:name=".GraphActivity"
             android:label="@string/title_activity_graph" >
         </activity>
+        <activity
+            android:name=".SubActivity"
+            android:label="@string/title_activity_sub" >
+        </activity>
     </application>
 
 </manifest>

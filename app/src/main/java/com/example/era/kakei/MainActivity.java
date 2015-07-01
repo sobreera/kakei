@@ -23,7 +23,11 @@ import android.support.v4.widget.DrawerLayout;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 
 public class MainActivity extends ActionBarActivity
@@ -105,14 +109,16 @@ public class MainActivity extends ActionBarActivity
                         */
 
                         //textView.setText("test");     デバッグ用
-
+                        /*
                         final Calendar calendar = Calendar.getInstance();
                         final int year = calendar.get(Calendar.YEAR);
                         final int month = calendar.get(Calendar.MONTH);
                         final int day = calendar.get(Calendar.DAY_OF_MONTH);
                         String date = year + "-" + (month+1) + "-" + day + "-";
+                        */
+                        String date = getNowDate();
                         values.put(Database.DATE,date);
-
+                        values.put(Database.LASTDATE,date);
                         values.put(Database.CATEGORY, food.getText().toString());
                         values.put(Database.PRICE, price.getText().toString());
                         long id=db.insert(
@@ -144,12 +150,9 @@ public class MainActivity extends ActionBarActivity
 
                     case DragEvent.ACTION_DROP:
 
-                        final Calendar calendar = Calendar.getInstance();
-                        final int year = calendar.get(Calendar.YEAR);
-                        final int month = calendar.get(Calendar.MONTH);
-                        final int day = calendar.get(Calendar.DAY_OF_MONTH);
-                        String date = year + "-" + (month+1) + "-" + day + "-";
+                        String date = getNowDate();
                         values.put(Database.DATE,date);
+                        values.put(Database.LASTDATE,date);
                         values.put(Database.CATEGORY,social.getText().toString());
                         values.put(Database.PRICE, price.getText().toString());
                         long id=db.insert(
@@ -181,12 +184,9 @@ public class MainActivity extends ActionBarActivity
 
                     case DragEvent.ACTION_DROP:
 
-                        final Calendar calendar = Calendar.getInstance();
-                        final int year = calendar.get(Calendar.YEAR);
-                        final int month = calendar.get(Calendar.MONTH);
-                        final int day = calendar.get(Calendar.DAY_OF_MONTH);
-                        String date = year + "-" + (month+1) + "-" + day + "-";
+                        String date = getNowDate();
                         values.put(Database.DATE,date);
+                        values.put(Database.LASTDATE,date);
                         values.put(Database.CATEGORY,recreation.getText().toString());
                         values.put(Database.PRICE, price.getText().toString());
                         long id=db.insert(
@@ -219,12 +219,9 @@ public class MainActivity extends ActionBarActivity
 
                     case DragEvent.ACTION_DROP:
 
-                        final Calendar calendar = Calendar.getInstance();
-                        final int year = calendar.get(Calendar.YEAR);
-                        final int month = calendar.get(Calendar.MONTH);
-                        final int day = calendar.get(Calendar.DAY_OF_MONTH);
-                        String date = year + "-" + (month+1) + "-" + day + "-";
+                        String date = getNowDate();
                         values.put(Database.DATE,date);
+                        values.put(Database.LASTDATE,date);
                         values.put(Database.CATEGORY, shopping.getText().toString());
                         values.put(Database.PRICE, price.getText().toString());
                         long id=db.insert(
@@ -262,6 +259,15 @@ public class MainActivity extends ActionBarActivity
         });
     }
 
+    /*
+    現在の端末日時をyyyy-MM-dd HH:mm:ss　形式で取得
+     */
+    public static String getNowDate(){
+        final DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        final Date date = new Date(System.currentTimeMillis());
+        return df.format(date);
+    }
+
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
@@ -280,7 +286,9 @@ public class MainActivity extends ActionBarActivity
                 Intent i = new Intent(MainActivity.this,AccountList.class);
                 startActivity(i);
                 break;
-            //case 3:
+            case 3:
+                Intent i2 = new Intent(MainActivity.this,SubActivity.class);
+                startActivity(i2);
                 //mTitle = getString(R.string.title_section3);
                 //break;
         }

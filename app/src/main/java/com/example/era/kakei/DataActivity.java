@@ -8,11 +8,16 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 
 public class DataActivity extends ActionBarActivity {
@@ -25,6 +30,7 @@ public class DataActivity extends ActionBarActivity {
     private SQLiteDatabase db;
     private ContentValues values;
     private String dataId;
+    Button button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +48,15 @@ public class DataActivity extends ActionBarActivity {
         db=helper.getWritableDatabase();
         values=new ContentValues();
 
+        button=(Button)findViewById(R.id.button2);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(DataActivity.this,SubActivity.class);
+                startActivity(i);
+            }
+        });
+
     }
 
     @Override
@@ -52,7 +67,7 @@ public class DataActivity extends ActionBarActivity {
         category.setText(i.getStringExtra("category"));
         price.setText(i.getStringExtra("price"));
         memo.setText(i.getStringExtra("memo"));
-        lastDate.setText(i.getStringExtra("last"));
+        lastDate.setText("最終更新日:"+i.getStringExtra("last"));
         dataId=i.getStringExtra("id");
     }
 
@@ -62,20 +77,19 @@ public class DataActivity extends ActionBarActivity {
         return true;
     }
 
+    public static String getNowDate(){
+        final DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        final Date date = new Date(System.currentTimeMillis());
+        return df.format(date);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
         if(id==R.id.save){
-            final Calendar calendar = Calendar.getInstance();
-            final int year = calendar.get(Calendar.YEAR);
-            final int month = calendar.get(Calendar.MONTH);
-            final int day = calendar.get(Calendar.DAY_OF_MONTH);
-            final int hour = calendar.get(Calendar.HOUR);
-            final int min = calendar.get(Calendar.MINUTE);
-            final int sec = calendar.get(Calendar.SECOND);
-            String date = year + "年" + (month+1) + "月" + day + "日 "+(hour+1)+"時"+min+"分"+sec+"秒";
-            values.put("lastDate","最終更新日:"+date);
+            String date = getNowDate();
+            values.put("lastDate",date);
             values.put("category",category.getText().toString());
             values.put("price",price.getText().toString());
             values.put("memo",memo.getText().toString());

@@ -4,9 +4,6 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-/**
- * Created by era on 15/06/24.
- */
 public class Database extends SQLiteOpenHelper {
     private static final String DB_NAME="kakeibo.db";
     private static final int DB_VERSION=2;
