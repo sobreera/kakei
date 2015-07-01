@@ -6,8 +6,8 @@ android {
 
     defaultConfig {
         applicationId "com.example.era.kakei"
-        minSdkVersion 16
-        targetSdkVersion 22
+        minSdkVersion 13
+        targetSdkVersion 21
         versionCode 1
         versionName "1.0"
     }
@@ -22,4 +22,8 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:22.2.0'
+    // support-v4 ライブラリの追加
+    compile 'com.android.support:support-v4:13.0.0'
+    // HoloGraphLibrary ライブラリの追加
+    compile 'com.echo:holographlibrary:1.0'
 }

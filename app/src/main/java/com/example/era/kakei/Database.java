@@ -8,14 +8,15 @@ import android.database.sqlite.SQLiteOpenHelper;
  * Created by era on 15/06/24.
  */
 public class Database extends SQLiteOpenHelper {
-    private static final String DB_NAME="kakei.db";
-    private static final int DB_VERSION=1;
+    private static final String DB_NAME="kakeibo.db";
+    private static final int DB_VERSION=2;
     public static String TABLE="myData";
     public static String ID="_id";
     public static String CATEGORY="category";
     public static String PRICE="price";
     public static String MEMO="memo";
     public static String DATE="date";
+    public static String LASTDATE="lastDate";
 
     public Database(Context context){
         super(context,DB_NAME,null,DB_VERSION);
@@ -28,6 +29,7 @@ public class Database extends SQLiteOpenHelper {
                         + CATEGORY + " text,"
                         + PRICE + " integer,"
                         + DATE + " text,"
+                        + LASTDATE +" text,"
                         + MEMO + " text);"
         );
     }

@@ -14,6 +14,10 @@ buildscript {
 
 allprojects {
     repositories {
+        //GitHubに公開されているレポリトジを追加
+        maven {
+            url 'https://github.com/powerje/mvn-repo/raw/master/'
+        }
         jcenter()
     }
 }

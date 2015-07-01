@@ -46,10 +46,12 @@ public class AccountList extends ActionBarActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 c.moveToPosition(position);
                 Intent i = new Intent(AccountList.this,DataActivity.class);
-                i.putExtra("date",c.getString(c.getColumnIndex("date")));
-                i.putExtra("category",c.getString(c.getColumnIndex("category")));
-                i.putExtra("price",c.getString(c.getColumnIndex("price")));
-                i.putExtra("memo",c.getString(c.getColumnIndex("memo")));
+                i.putExtra("date",c.getString(c.getColumnIndex(Database.DATE)));
+                i.putExtra("category",c.getString(c.getColumnIndex(Database.CATEGORY)));
+                i.putExtra("price",c.getString(c.getColumnIndex(Database.PRICE)));
+                i.putExtra("memo",c.getString(c.getColumnIndex(Database.MEMO)));
+                i.putExtra("id",c.getString(c.getColumnIndex(Database.ID)));
+                i.putExtra("last",c.getString(c.getColumnIndex(Database.LASTDATE)));
                 startActivity(i);
             }
         });
@@ -130,8 +132,8 @@ public class AccountList extends ActionBarActivity {
             sort = true;
         }
 
-        if (id == R.id.action_settings) {
-            return true;
+        if (id == android.R.id.home) {
+            finish();
         }
 
         return super.onOptionsItemSelected(item);

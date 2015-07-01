@@ -105,13 +105,19 @@ public class MainActivity extends ActionBarActivity
                         */
 
                         //textView.setText("test");     デバッグ用
+                        /*
                         final Calendar calendar = Calendar.getInstance();
                         final int year = calendar.get(Calendar.YEAR);
                         final int month = calendar.get(Calendar.MONTH);
                         final int day = calendar.get(Calendar.DAY_OF_MONTH);
-                        String date = year + "年" + (month+1) + "月" + day + "日";
+                        String date = year + "-" + (month+1) + "-" + day + "-";
                         values.put(Database.DATE,date);
-                        values.put(Database.CATEGORY, "食費");
+                        */
+                        String date = "insert int table "+
+                                "(date) "+
+                                "values(datetime('now'));";
+                        db.execSQL(date);
+                        values.put(Database.CATEGORY, food.getText().toString());
                         values.put(Database.PRICE, price.getText().toString());
                         long id=db.insert(
                                 Database.TABLE,
@@ -146,9 +152,9 @@ public class MainActivity extends ActionBarActivity
                         final int year = calendar.get(Calendar.YEAR);
                         final int month = calendar.get(Calendar.MONTH);
                         final int day = calendar.get(Calendar.DAY_OF_MONTH);
-                        String date = year + "年" + (month+1) + "月" + day + "日";
+                        String date = year + "-" + (month+1) + "-" + day + "-";
                         values.put(Database.DATE,date);
-                        values.put(Database.CATEGORY,"交際費");
+                        values.put(Database.CATEGORY,social.getText().toString());
                         values.put(Database.PRICE, price.getText().toString());
                         long id=db.insert(
                                 Database.TABLE,
@@ -183,9 +189,9 @@ public class MainActivity extends ActionBarActivity
                         final int year = calendar.get(Calendar.YEAR);
                         final int month = calendar.get(Calendar.MONTH);
                         final int day = calendar.get(Calendar.DAY_OF_MONTH);
-                        String date = year + "年" + (month+1) + "月" + day + "日";
+                        String date = year + "-" + (month+1) + "-" + day + "-";
                         values.put(Database.DATE,date);
-                        values.put(Database.CATEGORY,"娯楽費");
+                        values.put(Database.CATEGORY,recreation.getText().toString());
                         values.put(Database.PRICE, price.getText().toString());
                         long id=db.insert(
                                 Database.TABLE,
@@ -221,9 +227,9 @@ public class MainActivity extends ActionBarActivity
                         final int year = calendar.get(Calendar.YEAR);
                         final int month = calendar.get(Calendar.MONTH);
                         final int day = calendar.get(Calendar.DAY_OF_MONTH);
-                        String date = year + "年" + (month+1) + "月" + day + "日";
+                        String date = year + "-" + (month+1) + "-" + day + "-";
                         values.put(Database.DATE,date);
-                        values.put(Database.CATEGORY, "買い物費");
+                        values.put(Database.CATEGORY, shopping.getText().toString());
                         values.put(Database.PRICE, price.getText().toString());
                         long id=db.insert(
                                 Database.TABLE,
@@ -313,9 +319,6 @@ public class MainActivity extends ActionBarActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
 
         return super.onOptionsItemSelected(item);
     }
