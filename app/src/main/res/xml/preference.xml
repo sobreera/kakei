@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="@string/preference_title">
+        <PreferenceScreen
+            android:key="screen_preference"
+            android:title="@string/screen_preference_title"
+            android:summary="@string/screen_preference_summary">
+            <EditTextPreference
+                android:key="up_edit"
+                android:title="@string/up_title"
+                android:summary="@string/up_summary" />
+            <EditTextPreference
+                android:key="right_edit"
+                android:title="@string/right_title"
+                android:summary="@string/right_summary" />
+            <EditTextPreference
+                android:key="left_edit"
+                android:title="@string/left_title"
+                android:summary="@string/left_summary" />
+            <EditTextPreference
+                android:key="bottom_edit"
+                android:title="@string/bottom_title"
+                android:summary="@string/bottom_summary" />
+        </PreferenceScreen>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

@@ -22,6 +22,8 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="食費"
             android:gravity="center"
+            android:background="@color/black"
+            android:textColor="@color/white"
             android:id="@+id/food"
             android:layout_gravity="center_vertical|top" />
 

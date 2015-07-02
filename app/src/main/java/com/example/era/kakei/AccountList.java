@@ -35,8 +35,6 @@ public class AccountList extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_list);
 
-        setTitle("リスト");
-
         listView=(ListView)findViewById(R.id.listView);
         helper=new Database(getApplicationContext());
         db=helper.getWritableDatabase();

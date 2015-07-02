@@ -12,6 +12,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 
 public class SubActivity extends ActionBarActivity {
     TextView moku;
@@ -25,6 +29,7 @@ public class SubActivity extends ActionBarActivity {
     private Cursor c;
     int sumPrice=0;
     int yosan=10000;
+    int newSum=0;
     String searchWord;
 
     @Override
@@ -40,23 +45,27 @@ public class SubActivity extends ActionBarActivity {
         helper=new Database(getApplicationContext());
         db=helper.getWritableDatabase();
 
+        String sql = "select * from myData where date like '%' || ? || '%' escape '$'";
+        searchWord = getNowDate();
+        c=db.rawQuery(sql,new String[]{searchWord});
+        while(c.moveToNext()){
+            int getPrice = c.getInt(c.getColumnIndex(Database.PRICE));
+            newSum = newSum+getPrice;
+        }
+        moku.setText("残り金額:"+(yosan-newSum));
+
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 sortSum();
-                sum.setText(year.getText().toString()+"年"+month.getText().toString()+"月の使用金額:"+sumPrice);
-                onResume();
+                sum.setText(year.getText().toString() + "年" + month.getText().toString() + "月の使用金額:" + sumPrice);
             }
         });
-    }
-    @Override
-    public void onResume(){
-        super.onResume();
-        moku.setText("残り金額:"+(yosan-sumPrice));
     }
 
     public void sortSum(){
         String sql = "select * from myData where date like '%' || ? || '%' escape '$'";
+
         searchWord = year.getText().toString()+"-"+month.getText().toString();
         c=db.rawQuery(sql,new String[]{searchWord});
         sumPrice=0;
@@ -64,6 +73,12 @@ public class SubActivity extends ActionBarActivity {
             int getPrice = c.getInt(c.getColumnIndex(Database.PRICE));
             sumPrice = sumPrice+getPrice;
         }
+    }
+
+    public static String getNowDate(){
+        final DateFormat df = new SimpleDateFormat("yyyy-MM");
+        final Date date = new Date(System.currentTimeMillis());
+        return df.format(date);
     }
 
     @Override

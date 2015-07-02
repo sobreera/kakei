@@ -32,6 +32,10 @@
             android:name=".SubActivity"
             android:label="@string/title_activity_sub" >
         </activity>
+        <activity
+            android:name=".SettingActivity"
+            android:label="@string/title_activity_setting" >
+        </activity>
     </application>
 
 </manifest>

@@ -71,16 +71,16 @@ public class DataActivity extends ActionBarActivity {
         dataId=i.getStringExtra("id");
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_data, menu);
-        return true;
-    }
-
     public static String getNowDate(){
         final DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         final Date date = new Date(System.currentTimeMillis());
         return df.format(date);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_data, menu);
+        return true;
     }
 
     @Override
