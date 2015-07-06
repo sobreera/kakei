@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.content.ClipData;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
@@ -40,13 +42,14 @@ public class MainActivity extends ActionBarActivity
     private Database helper;
     private ContentValues values;
     EditText price;
-    TextView food;
-    TextView social;
-    TextView recreation;
-    TextView shopping;
+    TextView up;
+    TextView right;
+    TextView left;
+    TextView bottom;
     //当たり判定これらで取得しようとしたけどそれぞれにsetOnDragListenerセットした方が楽だったのでお蔵入り
     //Rect rect = new Rect();
     //int x,y;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,11 +59,12 @@ public class MainActivity extends ActionBarActivity
         price=(EditText)findViewById(R.id.editText);
         helper=new Database(getApplicationContext());
         db=helper.getWritableDatabase();
-        food=(TextView)findViewById(R.id.food);
-        social=(TextView)findViewById(R.id.social);
-        recreation=(TextView)findViewById(R.id.recreation);
-        shopping=(TextView)findViewById(R.id.shopping);
+        up=(TextView)findViewById(R.id.up);
+        right=(TextView)findViewById(R.id.right);
+        left=(TextView)findViewById(R.id.left);
+        bottom=(TextView)findViewById(R.id.bottom);
         values = new ContentValues();
+
 
 
         price.setOnLongClickListener(new View.OnLongClickListener(){
@@ -86,15 +90,23 @@ public class MainActivity extends ActionBarActivity
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
-        food.setOnDragListener(new View.OnDragListener() {
+        up.setOnDragListener(new View.OnDragListener() {
             @Override
             public boolean onDrag(View v, DragEvent event) {
                 //final int action = event.getAction();     intでもできることの確認
                 switch (event.getAction()) {
                     case DragEvent.ACTION_DRAG_STARTED:
+                        //ドラッグ開始時に呼び出し
+                    case DragEvent.ACTION_DRAG_ENDED:
+                        //ドラッグ終了時に呼び出し
                     case DragEvent.ACTION_DRAG_ENTERED:
-                    case DragEvent.ACTION_DRAG_LOCATION:
+                        //ドラッグ開始直後に呼び出し
                     case DragEvent.ACTION_DRAG_EXITED:
+                        //ドラッグ終了直前に呼び出し
+                        return true;
+                    case DragEvent.ACTION_DRAG_LOCATION:
+                        //ドラッグ中に呼び出し
+                        up.setBackgroundColor(Color.CYAN);
                         return true;
 
                     case DragEvent.ACTION_DROP:
@@ -104,17 +116,54 @@ public class MainActivity extends ActionBarActivity
                         */
 
                         String date = getNowDate();
+                        values.put(Database.DATE, date);
+                        values.put(Database.LASTDATE, date);
+                        values.put(Database.CATEGORY, up.getText().toString());
+                        values.put(Database.PRICE, price.getText().toString());
+                        long id = db.insert(
+                                Database.TABLE,
+                                null,
+                                values
+                        );
+                        Log.d(null, "insert:" + id);
+                        Toast.makeText(MainActivity.this, "保存完了:" + date, Toast.LENGTH_SHORT).show();
+                        return true;
+
+                    default:
+                        up.setBackgroundColor(Color.WHITE);
+                        break;
+                }
+
+                return false;
+            }
+        });
+
+        right.setOnDragListener(new View.OnDragListener() {
+            @Override
+            public boolean onDrag(View v, DragEvent event) {
+                switch (event.getAction()) {
+                    case DragEvent.ACTION_DRAG_STARTED:
+                    case DragEvent.ACTION_DRAG_ENTERED:
+                    case DragEvent.ACTION_DRAG_EXITED:
+                        return true;
+                    case DragEvent.ACTION_DRAG_LOCATION:
+                        right.setBackgroundColor(Color.CYAN);
+                        return true;
+
+                    case DragEvent.ACTION_DROP:
+
+                        String date = getNowDate();
                         values.put(Database.DATE,date);
                         values.put(Database.LASTDATE,date);
-                        values.put(Database.CATEGORY, food.getText().toString());
+                        values.put(Database.CATEGORY,right.getText().toString());
                         values.put(Database.PRICE, price.getText().toString());
                         long id=db.insert(
                                 Database.TABLE,
                                 null,
                                 values
                         );
-                        Log.d(null,"insert:"+id);
                         Toast.makeText(MainActivity.this,"保存完了:"+date,Toast.LENGTH_SHORT).show();
+                        Log.d(null,"insert:"+id);
                         return true;
 
                     default:
@@ -125,7 +174,44 @@ public class MainActivity extends ActionBarActivity
             }
         });
 
-        social.setOnDragListener(new View.OnDragListener() {
+        left.setOnDragListener(new View.OnDragListener() {
+            @Override
+            public boolean onDrag(View v, DragEvent event) {
+                switch (event.getAction()) {
+                    case DragEvent.ACTION_DRAG_STARTED:
+                    case DragEvent.ACTION_DRAG_ENTERED:
+                    case DragEvent.ACTION_DRAG_EXITED:
+                        return true;
+                    case DragEvent.ACTION_DRAG_LOCATION:
+                        left.setBackgroundColor(Color.CYAN);
+                        return true;
+
+                    case DragEvent.ACTION_DROP:
+
+                        String date = getNowDate();
+                        values.put(Database.DATE,date);
+                        values.put(Database.LASTDATE,date);
+                        values.put(Database.CATEGORY,left.getText().toString());
+                        values.put(Database.PRICE, price.getText().toString());
+                        long id=db.insert(
+                                Database.TABLE,
+                                null,
+                                values
+                        );
+                        Toast.makeText(MainActivity.this,"保存完了:"+date,Toast.LENGTH_SHORT).show();
+                        Log.d(null,"insert:"+id);
+
+                        return true;
+
+                    default:
+                        break;
+                }
+
+                return false;
+            }
+        });
+
+        bottom.setOnDragListener(new View.OnDragListener() {
             @Override
             public boolean onDrag(View v, DragEvent event) {
                 switch (event.getAction()) {
@@ -140,76 +226,7 @@ public class MainActivity extends ActionBarActivity
                         String date = getNowDate();
                         values.put(Database.DATE,date);
                         values.put(Database.LASTDATE,date);
-                        values.put(Database.CATEGORY,social.getText().toString());
-                        values.put(Database.PRICE, price.getText().toString());
-                        long id=db.insert(
-                                Database.TABLE,
-                                null,
-                                values
-                        );
-                        Toast.makeText(MainActivity.this,"保存完了:"+date,Toast.LENGTH_SHORT).show();
-                        Log.d(null,"insert:"+id);
-                        return true;
-
-                    default:
-                        break;
-                }
-
-                return false;
-            }
-        });
-
-        recreation.setOnDragListener(new View.OnDragListener() {
-            @Override
-            public boolean onDrag(View v, DragEvent event) {
-                switch (event.getAction()) {
-                    case DragEvent.ACTION_DRAG_STARTED:
-                    case DragEvent.ACTION_DRAG_ENTERED:
-                    case DragEvent.ACTION_DRAG_LOCATION:
-                    case DragEvent.ACTION_DRAG_EXITED:
-                        return true;
-
-                    case DragEvent.ACTION_DROP:
-
-                        String date = getNowDate();
-                        values.put(Database.DATE,date);
-                        values.put(Database.LASTDATE,date);
-                        values.put(Database.CATEGORY,recreation.getText().toString());
-                        values.put(Database.PRICE, price.getText().toString());
-                        long id=db.insert(
-                                Database.TABLE,
-                                null,
-                                values
-                        );
-                        Toast.makeText(MainActivity.this,"保存完了:"+date,Toast.LENGTH_SHORT).show();
-                        Log.d(null,"insert:"+id);
-
-                        return true;
-
-                    default:
-                        break;
-                }
-
-                return false;
-            }
-        });
-
-        shopping.setOnDragListener(new View.OnDragListener() {
-            @Override
-            public boolean onDrag(View v, DragEvent event) {
-                switch (event.getAction()) {
-                    case DragEvent.ACTION_DRAG_STARTED:
-                    case DragEvent.ACTION_DRAG_ENTERED:
-                    case DragEvent.ACTION_DRAG_LOCATION:
-                    case DragEvent.ACTION_DRAG_EXITED:
-                        return true;
-
-                    case DragEvent.ACTION_DROP:
-
-                        String date = getNowDate();
-                        values.put(Database.DATE,date);
-                        values.put(Database.LASTDATE,date);
-                        values.put(Database.CATEGORY, shopping.getText().toString());
+                        values.put(Database.CATEGORY, bottom.getText().toString());
                         values.put(Database.PRICE, price.getText().toString());
                         long id=db.insert(
                                 Database.TABLE,
@@ -244,6 +261,19 @@ public class MainActivity extends ActionBarActivity
                 return false;
             }
         });
+    }
+
+    public void onResume(){
+        super.onResume();
+        SharedPreferences data = getSharedPreferences("settings",MODE_PRIVATE);
+        String upName = data.getString("up_edit", "食費");
+        String rightName = data.getString("right_edit", "交際費");
+        String leftName = data.getString("left_edit", "娯楽費");
+        String bottomName = data.getString("bottom_edit","買い物費");
+        up.setText(upName);
+        right.setText(rightName);
+        left.setText(leftName);
+        bottom.setText(bottomName);
     }
 
     /*

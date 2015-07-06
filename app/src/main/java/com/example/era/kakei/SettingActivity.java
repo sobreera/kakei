@@ -2,7 +2,7 @@ package com.example.era.kakei;
 
 import android.preference.PreferenceActivity;
 import android.os.Bundle;
-
+import android.preference.PreferenceManager;
 
 
 public class SettingActivity extends PreferenceActivity {
@@ -10,6 +10,7 @@ public class SettingActivity extends PreferenceActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         getFragmentManager().beginTransaction()
                 .replace(android.R.id.content, new SettingFragment()).commit();
     }

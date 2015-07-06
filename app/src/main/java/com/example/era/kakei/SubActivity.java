@@ -52,7 +52,7 @@ public class SubActivity extends ActionBarActivity {
             int getPrice = c.getInt(c.getColumnIndex(Database.PRICE));
             newSum = newSum+getPrice;
         }
-        moku.setText("残り金額:"+(yosan-newSum));
+        moku.setText("今月の残り金額:"+(yosan-newSum));
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
