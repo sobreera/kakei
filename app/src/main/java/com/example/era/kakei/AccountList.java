@@ -1,11 +1,17 @@
 package com.example.era.kakei;
 
 import android.app.AlertDialog;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,125 +21,188 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 
-public class AccountList extends ActionBarActivity {
+public class AccountList extends FragmentActivity {
 
-    private SQLiteDatabase db;
-    private Database helper;
-
-    private ArrayList<String> arr;
-    private ListView listView;
-    private ArrayAdapter<String> adapter;
-    private Cursor c;
-    private boolean sort = false;
+    private FragmentPagerAdapter mPagerAdapter = null;
+    private ViewPager mViewPager = null;
+    Calendar currentDate;
+    int defaultPosition;
+    String newYosanSt;
+    int newYosan;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_list);
 
-        listView=(ListView)findViewById(R.id.listView);
-        helper=new Database(getApplicationContext());
-        db=helper.getWritableDatabase();
+        //現在の日時
+        currentDate = Calendar.getInstance();
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                c.moveToPosition(position);
-                Intent i = new Intent(AccountList.this,DataActivity.class);
-                i.putExtra("date",c.getString(c.getColumnIndex(Database.DATE)));
-                i.putExtra("category",c.getString(c.getColumnIndex(Database.CATEGORY)));
-                i.putExtra("price",c.getString(c.getColumnIndex(Database.PRICE)));
-                i.putExtra("memo",c.getString(c.getColumnIndex(Database.MEMO)));
-                i.putExtra("id",c.getString(c.getColumnIndex(Database.ID)));
-                i.putExtra("last",c.getString(c.getColumnIndex(Database.LASTDATE)));
-                startActivity(i);
-            }
-        });
+        //FragmentPagerAdapter の設定
+        mPagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager());
 
-        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                c.moveToPosition(position);
-                AlertDialog.Builder builder = new AlertDialog.Builder(AccountList.this);
-                builder.setTitle("データの削除");
-                builder.setMessage("このデータを削除してもよろしいですか");
-                builder.setCancelable(false);
-                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        db.delete(
-                                Database.TABLE,
-                                Database.ID + " = ?",
-                                new String[]{c.getString(c.getColumnIndex(Database.ID))}
-                        );
-                        setAdapter();
-                    }
-                });
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                    }
-                });
-                builder.create().show();
-                return true;
-            }
-        });
+        //ViewPager の設定
+        mViewPager = (ViewPager)findViewById(R.id.viewPager);
+        mViewPager.setAdapter(mPagerAdapter);
+
+        SharedPreferences data = getSharedPreferences("settings", MODE_PRIVATE);
+        newYosanSt = data.getString("new_yosan","10000");
+        newYosan = Integer.parseInt(newYosanSt);
     }
+
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
-        if(!sort) {
-            setAdapter();
-        }
+
+        defaultPosition = MyFragmentPagerAdapter.MaxPage/2;
+        mViewPager.setCurrentItem(defaultPosition, false);
+
     }
 
-    public void setAdapter(){
-        try {
-            arr = new ArrayList<>();
-            c = db.rawQuery("select * from " + Database.TABLE,null);
-            while(c.moveToNext()){
-                String dbDate = c.getString(c.getColumnIndex(Database.DATE));
-                String dbCategory = c.getString(c.getColumnIndex(Database.CATEGORY));
-                int dbPrice = c.getInt(c.getColumnIndex(Database.PRICE));
-                arr.add(dbDate+":"+dbCategory + ":" + dbPrice+"円");
-            }
-            adapter = new ArrayAdapter<>(
-                    getApplicationContext(),
-                    R.layout.list_row,
-                    arr
-            );
+    //ViewPager 用のAdapter の設定
+    //メモリ使用量が多い、Fragmentを大量に生成するような場合は
+    //FragmentPagerAdapter を検討
+    public  class MyFragmentPagerAdapter extends FragmentPagerAdapter {
 
-        } catch(SQLiteException se){
-            Log.e(getClass().getSimpleName(),"Could not create or Open the database");
+        //最大ページ数を1000に
+        public static final int MaxPage = 1000;
+
+        public  MyFragmentPagerAdapter(android.support.v4.app.FragmentManager fm){
+            super(fm);
         }
+
+        //画面表示するFragmentを返す
+        @Override
+        public Fragment getItem(int position){
+
+            //初期位置からの位置
+            int targetPosition = position-defaultPosition;
+
+            String Title = getNowDate(targetPosition);
+
+            //取得した日時をbundleでFragment側に渡す
+            Bundle bundle = new Bundle();
+            bundle.putString("date",Title);
+            bundle.putInt("newYosan", newYosan);
+
+            //Fragmentを作成
+            ListFragment fragment = new ListFragment();
+            //Bundle情報をセット
+            fragment.setArguments(bundle);
+            return fragment;
+
+        }
+
+        //表示するFragment 数を返す
+        @Override
+        public int getCount(){
+            //最大ページ数返しとけばいい
+            return MaxPage;
+        }
+
+        //ページタイトルを返す
+        @Override
+        public CharSequence getPageTitle(int position){
+
+            int targetPosition = position-defaultPosition;
+
+            String Title = getNowDate(targetPosition);
+
+            String[] split = Title.split("-", 0);
+            int split1 = Integer.parseInt(split[1]);
+            split[1] = String.valueOf(split1);
+            Title = split[0]+"年"+split[1]+"月";
+            return Title;
+        }
+
+        @Override
+        public int getItemPosition(Object object) {
+            return PagerAdapter.POSITION_NONE;
+        }
+
+    }
+
+
+/*
+    public void setAdapter() {
+        arr = new ArrayList<>();
+        String now = getNowDate2();
+        now = now.replace("0", "");
+        String[] nowSplit = now.split("-", 0);
+        if (sort) {
+            c = db.rawQuery("select * from myData where date like '%' || ? || '%' escape '$' order by date asc", new String[]{searchWord});
+        } else {
+            c = db.rawQuery("select * from myData where date like '%' || ? || '%' escape '$' order by date desc", new String[]{searchWord});
+        }
+        while (c.moveToNext()) {
+            String dbDate = nowSplit[1] + "/" + nowSplit[2];
+            String dbCategory = c.getString(c.getColumnIndex(Database.CATEGORY));
+            int dbPrice = c.getInt(c.getColumnIndex(Database.PRICE));
+            sum = sum + dbPrice;
+            Log.d(null, "sum:" + sum);
+            arr.add(dbDate + "　" + dbCategory + ":" + dbPrice + "円");
+        }
+        adapter = new ArrayAdapter<>(
+                getApplicationContext(),
+                R.layout.custom_text_list_item,
+                arr
+        );
 
         listView.setAdapter(adapter);
     }
+*/
+    public String getNowDate(int targetPosition){
+        //日時取得
+        Calendar targetDate = (Calendar) currentDate.clone();
+        targetDate.add(Calendar.MONTH, targetPosition);
+        String Title = convertDefault("yyyy-MM-dd", targetDate.getTime());
+        return Title;
+    }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_account_list, menu);
-        return true;
+    public String convertDefault(String format,Date date){
+        Locale loc = Locale.getDefault();
+        DateFormat df = new SimpleDateFormat(format, loc);
+        TimeZone zone = TimeZone.getDefault();
+        df.setTimeZone(zone);
+        return df.format(date);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-
-        if(id == R.id.sort){
-            sort = true;
+/*
+        if (id == R.id.sort) {
+            //降順昇順切り替え用
+            if (sort) {
+                sort = false;
+            } else {
+                sort = true;
+            }
+            setAdapter();
         }
-
+*/
+        if (id == R.id.action_settings) {
+            Intent i = new android.content.Intent(this, SettingActivity.class);
+            startActivity(i);
+            return true;
+        }
         if (id == android.R.id.home) {
             finish();
         }
 
         return super.onOptionsItemSelected(item);
     }
+
 }

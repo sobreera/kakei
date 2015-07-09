@@ -1,6 +1,7 @@
 package com.example.era.kakei;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.ActionBarActivity;
@@ -52,7 +53,7 @@ public class SubActivity extends ActionBarActivity {
             int getPrice = c.getInt(c.getColumnIndex(Database.PRICE));
             newSum = newSum+getPrice;
         }
-        moku.setText("今月の残り金額:"+(yosan-newSum));
+        moku.setText("今月の残り金額:"+(yosan-newSum)+"円");
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,7 +66,10 @@ public class SubActivity extends ActionBarActivity {
 
     public void sortSum(){
         String sql = "select * from myData where date like '%' || ? || '%' escape '$'";
-
+        String getMonth = month.getText().toString();
+        if(getMonth.length()==1){
+            month.setText("0"+month.getText().toString());
+        }
         searchWord = year.getText().toString()+"-"+month.getText().toString();
         c=db.rawQuery(sql,new String[]{searchWord});
         sumPrice=0;
@@ -97,6 +101,8 @@ public class SubActivity extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Intent i = new android.content.Intent(this,SettingActivity.class);
+            startActivity(i);
             return true;
         }
 

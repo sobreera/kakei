@@ -24,13 +24,20 @@
     <string name="left_summary">左部費目を変更します</string>
     <string name="bottom_title">下部</string>
     <string name="bottom_summary">下部費目を変更します</string>
+    <string name="yosan_title">予算の設定</string>
+    <string name="yosan_summary">来月の予算を設定します</string>
+
 
     <string name="action_settings">設定</string>
-    <string name="title_activity_account_list">家計簿：リスト</string>
+    <string name="title_activity_account_list">家計簿:リスト</string>
 
     <string name="hello_world">Hello world!</string>
-    <string name="title_activity_data">家計簿：編集</string>
-    <string name="title_activity_graph">家計簿：グラフ</string>
-    <string name="title_activity_sub">SubActivity</string>
-    <string name="title_activity_setting">SettingActivity</string>
+    <string name="title_activity_data">家計簿:編集</string>
+    <string name="title_activity_graph">家計簿:グラフ</string>
+    <string name="title_activity_sub">家計簿:目標</string>
+    <string name="title_activity_setting">家計簿:設定</string>
+    <string name="title_activity_fragment">FragmentActivity</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

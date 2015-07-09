@@ -7,13 +7,13 @@
     <!-- As the main content view, the view below consumes the entire
          space available using match_parent in both dimensions. -->
     <FrameLayout android:id="@+id/container" android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent" android:background="@color/cloud">
 
         <EditText
             android:layout_width="130dp"
             android:layout_height="wrap_content"
             android:id="@+id/editText"
-            android:hint="金額を入力"
+            android:hint="￥"
             android:gravity="center"
             android:layout_gravity="center" />
 
@@ -21,7 +21,8 @@
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="食費"
+            android:text="上"
+            android:background="@color/blue"
             android:gravity="center"
             android:id="@+id/up"
             android:layout_gravity="center_vertical|top" />
@@ -30,7 +31,8 @@
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="買い物費"
+            android:text="下"
+            android:background="@color/blue"
             android:gravity="center"
             android:id="@+id/bottom"
             android:layout_gravity="center_horizontal|bottom" />
@@ -39,7 +41,8 @@
             android:layout_width="330dp"
             android:layout_height="70dp"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="交際費"
+            android:text="右"
+            android:background="@color/blue"
             android:rotation="90"
             android:gravity="center"
             android:id="@+id/right"
@@ -50,7 +53,8 @@
             android:layout_width="330dp"
             android:layout_height="70dp"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="娯楽"
+            android:text="左"
+            android:background="@color/blue"
             android:rotation="270"
             android:gravity="center"
             android:id="@+id/left"

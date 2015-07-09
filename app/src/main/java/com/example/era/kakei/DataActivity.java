@@ -30,14 +30,11 @@ public class DataActivity extends ActionBarActivity {
     private SQLiteDatabase db;
     private ContentValues values;
     private String dataId;
-    Button button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_data);
-
-        setTitle("うまいラーメン屋の屋台");
 
         date=(TextView)findViewById(R.id.date);
         category=(EditText)findViewById(R.id.category);
@@ -47,15 +44,6 @@ public class DataActivity extends ActionBarActivity {
         helper=new Database(getApplicationContext());
         db=helper.getWritableDatabase();
         values=new ContentValues();
-
-        button=(Button)findViewById(R.id.button2);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(DataActivity.this,SubActivity.class);
-                startActivity(i);
-            }
-        });
 
     }
 

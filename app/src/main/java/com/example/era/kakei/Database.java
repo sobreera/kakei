@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class Database extends SQLiteOpenHelper {
     private static final String DB_NAME="kakeibo.db";
-    private static final int DB_VERSION=2;
+    private static final int DB_VERSION=3;
     public static String TABLE="myData";
     public static String ID="_id";
     public static String CATEGORY="category";
@@ -14,6 +14,7 @@ public class Database extends SQLiteOpenHelper {
     public static String MEMO="memo";
     public static String DATE="date";
     public static String LASTDATE="lastDate";
+    public static String YOSAN="yosan";
 
     public Database(Context context){
         super(context,DB_NAME,null,DB_VERSION);
@@ -25,6 +26,7 @@ public class Database extends SQLiteOpenHelper {
                         + ID + " integer primary key,"
                         + CATEGORY + " text,"
                         + PRICE + " integer,"
+                        + YOSAN + " integer,"
                         + DATE + " text,"
                         + LASTDATE +" text,"
                         + MEMO + " text);"

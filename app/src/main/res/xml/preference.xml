@@ -25,6 +25,11 @@
                 android:summary="@string/bottom_summary" />
         </PreferenceScreen>
 
+        <EditTextPreference
+            android:key="new_yosan"
+            android:title="@string/yosan_title"
+            android:summary="@string/yosan_summary" />
+
     </PreferenceCategory>
 
 </PreferenceScreen>

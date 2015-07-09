@@ -8,7 +8,7 @@
     <item
         android:id="@+id/sort"
         android:title="ソート"
-        android:icon="@android:drawable/ic_menu_edit"
+        android:icon="@android:drawable/ic_menu_sort_alphabetically"
         android:orderInCategory="100"
         app:showAsAction="ifRoom"
         />

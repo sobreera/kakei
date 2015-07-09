@@ -41,6 +41,10 @@ public class MainActivity extends ActionBarActivity
     private SQLiteDatabase db;
     private Database helper;
     private ContentValues values;
+    static int newYosan;
+    static int oldYosan;
+    static String oldDate;
+    static String getMonth;
     EditText price;
     TextView up;
     TextView right;
@@ -56,6 +60,7 @@ public class MainActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         price=(EditText)findViewById(R.id.editText);
         helper=new Database(getApplicationContext());
         db=helper.getWritableDatabase();
@@ -65,7 +70,65 @@ public class MainActivity extends ActionBarActivity
         bottom=(TextView)findViewById(R.id.bottom);
         values = new ContentValues();
 
+        SharedPreferences data = getSharedPreferences("settings", MODE_PRIVATE);
+        SharedPreferences.Editor editor =data.edit();
+        //editor.clear();
+        //editor.commit();
+        String newYosanSt = data.getString("new_yosan", "10000");
+        String oldYosanSt = data.getString("old_yosan", "10000");
+        newYosan = Integer.parseInt(newYosanSt);
+        oldYosan = Integer.parseInt(oldYosanSt);
+        Log.d(null,"oldYosan:"+oldYosan);
+        Log.d(null,"newYosan:"+newYosan);
+        oldDate = data.getString("old_date", null);
+        getMonth = getNowMonth();
+        Log.d(null, "oldDate:" + oldDate + " getMonth:" + getMonth);
+        editor.putString("new_date", getMonth);
+        if(!getMonth.equals(oldDate)){
+            editor.putString("old_yosan",newYosanSt);
+            Log.d(null,"true");
+        }else{
+            Log.d(null,"false");
+        }
+        editor.putString("old_date", getMonth);
+        editor.commit();
 
+    }
+
+    public void onResume(){
+        super.onResume();
+        SharedPreferences data = getSharedPreferences("settings", MODE_PRIVATE);
+        SharedPreferences.Editor editor =data.edit();
+        //editor.clear();
+        //editor.commit();
+        String newYosanSt = data.getString("new_yosan", "10000");
+        String oldYosanSt = data.getString("old_yosan", "10000");
+        newYosan = Integer.parseInt(newYosanSt);
+        oldYosan = Integer.parseInt(oldYosanSt);
+        Log.d(null,"oldYosan:"+oldYosan);
+        Log.d(null,"newYosan:"+newYosan);
+        oldDate = data.getString("old_date", null);
+        getMonth = getNowMonth();
+        Log.d(null, "oldDate:" + oldDate + " getMonth:" + getMonth);
+        editor.putString("new_date", getMonth);
+        if(!getMonth.equals(oldDate)){
+            editor.putString("old_yosan",newYosanSt);
+            Log.d(null,"true");
+        }else{
+            Log.d(null,"false");
+        }
+        editor.putString("old_date", getMonth);
+        editor.commit();
+        Log.d(null, "oldYosan:" + oldYosan);
+        Log.d(null, "newYosan:" + newYosan);
+        String upName = data.getString("up_edit", "食費");
+        String rightName = data.getString("right_edit", "交際費");
+        String leftName = data.getString("left_edit", "娯楽費");
+        String bottomName = data.getString("bottom_edit","買い物費");
+        up.setText(upName);
+        right.setText(rightName);
+        left.setText(leftName);
+        bottom.setText(bottomName);
 
         price.setOnLongClickListener(new View.OnLongClickListener(){
             @Override
@@ -106,7 +169,6 @@ public class MainActivity extends ActionBarActivity
                         return true;
                     case DragEvent.ACTION_DRAG_LOCATION:
                         //ドラッグ中に呼び出し
-                        up.setBackgroundColor(Color.CYAN);
                         return true;
 
                     case DragEvent.ACTION_DROP:
@@ -120,6 +182,7 @@ public class MainActivity extends ActionBarActivity
                         values.put(Database.LASTDATE, date);
                         values.put(Database.CATEGORY, up.getText().toString());
                         values.put(Database.PRICE, price.getText().toString());
+                        values.put(Database.YOSAN, oldYosan);
                         long id = db.insert(
                                 Database.TABLE,
                                 null,
@@ -130,7 +193,6 @@ public class MainActivity extends ActionBarActivity
                         return true;
 
                     default:
-                        up.setBackgroundColor(Color.WHITE);
                         break;
                 }
 
@@ -147,23 +209,23 @@ public class MainActivity extends ActionBarActivity
                     case DragEvent.ACTION_DRAG_EXITED:
                         return true;
                     case DragEvent.ACTION_DRAG_LOCATION:
-                        right.setBackgroundColor(Color.CYAN);
                         return true;
 
                     case DragEvent.ACTION_DROP:
 
                         String date = getNowDate();
-                        values.put(Database.DATE,date);
-                        values.put(Database.LASTDATE,date);
-                        values.put(Database.CATEGORY,right.getText().toString());
+                        values.put(Database.DATE, date);
+                        values.put(Database.LASTDATE, date);
+                        values.put(Database.CATEGORY, right.getText().toString());
                         values.put(Database.PRICE, price.getText().toString());
-                        long id=db.insert(
+                        values.put(Database.YOSAN, oldYosan);
+                        long id = db.insert(
                                 Database.TABLE,
                                 null,
                                 values
                         );
-                        Toast.makeText(MainActivity.this,"保存完了:"+date,Toast.LENGTH_SHORT).show();
-                        Log.d(null,"insert:"+id);
+                        Toast.makeText(MainActivity.this, "保存完了:" + date, Toast.LENGTH_SHORT).show();
+                        Log.d(null, "insert:" + id);
                         return true;
 
                     default:
@@ -183,23 +245,23 @@ public class MainActivity extends ActionBarActivity
                     case DragEvent.ACTION_DRAG_EXITED:
                         return true;
                     case DragEvent.ACTION_DRAG_LOCATION:
-                        left.setBackgroundColor(Color.CYAN);
                         return true;
 
                     case DragEvent.ACTION_DROP:
 
                         String date = getNowDate();
-                        values.put(Database.DATE,date);
-                        values.put(Database.LASTDATE,date);
-                        values.put(Database.CATEGORY,left.getText().toString());
+                        values.put(Database.DATE, date);
+                        values.put(Database.LASTDATE, date);
+                        values.put(Database.CATEGORY, left.getText().toString());
                         values.put(Database.PRICE, price.getText().toString());
-                        long id=db.insert(
+                        values.put(Database.YOSAN, oldYosan);
+                        long id = db.insert(
                                 Database.TABLE,
                                 null,
                                 values
                         );
-                        Toast.makeText(MainActivity.this,"保存完了:"+date,Toast.LENGTH_SHORT).show();
-                        Log.d(null,"insert:"+id);
+                        Toast.makeText(MainActivity.this, "保存完了:" + date, Toast.LENGTH_SHORT).show();
+                        Log.d(null, "insert:" + id);
 
                         return true;
 
@@ -224,17 +286,18 @@ public class MainActivity extends ActionBarActivity
                     case DragEvent.ACTION_DROP:
 
                         String date = getNowDate();
-                        values.put(Database.DATE,date);
-                        values.put(Database.LASTDATE,date);
+                        values.put(Database.DATE, date);
+                        values.put(Database.LASTDATE, date);
                         values.put(Database.CATEGORY, bottom.getText().toString());
                         values.put(Database.PRICE, price.getText().toString());
-                        long id=db.insert(
+                        values.put(Database.YOSAN, oldYosan);
+                        long id = db.insert(
                                 Database.TABLE,
                                 null,
                                 values
                         );
-                        Toast.makeText(MainActivity.this,"保存完了:"+date,Toast.LENGTH_SHORT).show();
-                        Log.d(null,"insert:"+id);
+                        Toast.makeText(MainActivity.this, "保存完了:" + date, Toast.LENGTH_SHORT).show();
+                        Log.d(null, "insert:" + id);
                         return true;
 
                     default:
@@ -263,24 +326,17 @@ public class MainActivity extends ActionBarActivity
         });
     }
 
-    public void onResume(){
-        super.onResume();
-        SharedPreferences data = getSharedPreferences("settings",MODE_PRIVATE);
-        String upName = data.getString("up_edit", "食費");
-        String rightName = data.getString("right_edit", "交際費");
-        String leftName = data.getString("left_edit", "娯楽費");
-        String bottomName = data.getString("bottom_edit","買い物費");
-        up.setText(upName);
-        right.setText(rightName);
-        left.setText(leftName);
-        bottom.setText(bottomName);
-    }
-
     /*
     現在の端末日時をyyyy-MM-dd HH:mm:ss　形式で取得
      */
     public static String getNowDate(){
         final DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        final Date date = new Date(System.currentTimeMillis());
+        return df.format(date);
+    }
+
+    public static String getNowMonth(){
+        final DateFormat df = new SimpleDateFormat("yyyy-MM");
         final Date date = new Date(System.currentTimeMillis());
         return df.format(date);
     }
@@ -297,17 +353,11 @@ public class MainActivity extends ActionBarActivity
     public void onSectionAttached(int number) {
         switch (number) {
             case 1:
-                mTitle=getString(R.string.app_name);
                 break;
             case 2:
                 Intent i = new Intent(MainActivity.this,AccountList.class);
                 startActivity(i);
                 break;
-            case 3:
-                Intent i2 = new Intent(MainActivity.this,SubActivity.class);
-                startActivity(i2);
-                //mTitle = getString(R.string.title_section3);
-                //break;
         }
     }
 

@@ -8,12 +8,15 @@
     tools:context="com.example.era.kakei.SubActivity">
 
     <TextView
-        android:layout_width="267dp"
+        android:layout_width="305dp"
         android:layout_height="57dp"
         android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_marginTop="70dp"
         android:text="ここに一月の目標が入る"
         android:textColor="@color/white"
+        android:textSize="25dp"
         android:id="@+id/moku"
+        android:gravity="center"
         android:layout_gravity="center_horizontal|top" />
 
     <EditText
@@ -44,9 +47,11 @@
         android:layout_gravity="right|center_vertical" />
 
     <TextView
-        android:layout_width="264dp"
+        android:layout_width="355dp"
         android:layout_height="wrap_content"
+        android:layout_margin="150dp"
         android:textAppearance="?android:attr/textAppearanceLarge"
+        android:gravity="center"
         android:text="その月の合計金額"
         android:textColor="@color/white"
         android:id="@+id/sum"
