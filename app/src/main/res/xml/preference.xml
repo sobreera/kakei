@@ -27,6 +27,7 @@
 
         <EditTextPreference
             android:key="new_yosan"
+            android:inputType="number"
             android:title="@string/yosan_title"
             android:summary="@string/yosan_summary" />
 

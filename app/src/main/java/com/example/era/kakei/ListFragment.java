@@ -19,8 +19,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 
 /**
@@ -63,14 +66,13 @@ public class ListFragment extends Fragment {
 
         Bundle bundle = getArguments();
         final String Date = bundle.getString("date");
-        int newYosan = bundle.getInt("newYosan");
-
-
 
         View view = inflater.inflate(R.layout.fragment_list, container, false);
         textView=(TextView)view.findViewById(R.id.textView);
         textView2=(TextView)view.findViewById(R.id.textView2);
         listView=(ListView)view.findViewById(R.id.list_item);
+
+        setGetYosan();
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -84,6 +86,7 @@ public class ListFragment extends Fragment {
                 i.putExtra("id", c.getString(c.getColumnIndex(Database.ID)));
                 i.putExtra("last", c.getString(c.getColumnIndex(Database.LASTDATE)));
                 startActivity(i);
+
             }
         });
 
@@ -116,6 +119,24 @@ public class ListFragment extends Fragment {
             }
         });
 
+
+
+        return view;
+    }
+
+    public void onResume(){
+        super.onResume();
+        Bundle bundle = getArguments();
+        final String Date = bundle.getString("date");
+        setAdapter(Date);
+        setGetYosan();
+    }
+
+    public void setGetYosan(){
+        Bundle bundle = getArguments();
+        final String Date = bundle.getString("date");
+        int newYosan = bundle.getInt("newYosan");
+
         sql = "select * from myData where date like '%' || ? || '%' escape '$' order by date desc limit 1";
         searchWord = Date;
         c = db.rawQuery(sql, new String[]{searchWord});
@@ -129,14 +150,40 @@ public class ListFragment extends Fragment {
         if(getYosan==0){
             getYosan=newYosan;
         }
+
         textView.setText(nowSplit[1] + "月の予算額:" + getYosan + "円");
 
         sum = 0;
         setAdapter(Date);
         Log.d(null, "sum2:" + sum);
-        textView2.setText("今月の残り予算" + (getYosan - sum) + "円");
+        String getMonth = getNowMonth();
+        getMonth = getMonth.replace("-","0");
+        int nowInt = Integer.parseInt(getMonth);
+        String[] thisSplit = Date.split("-",0);
+        String thisMonth = thisSplit[0]+"0"+thisSplit[1];
+        int thisInt = Integer.parseInt(thisMonth);
+        Log.d(null,"nowInt:"+nowInt+" thisInt:"+thisInt);
+        if(getMonth.equals(Date)){
+            textView2.setText("今月の残り予算" + (getYosan - sum) + "円");
+        }else if(nowInt<thisInt){
+            if((getYosan-sum)>0) {
+                textView2.setText(nowSplit[1] + "月の貯金予定額" + (getYosan - sum) + "円");
+            }else if((getYosan-sum)<0){
+                textView2.setText(nowSplit[1] + "月の赤字額" + (getYosan - sum) + "円");
+            }
+        }else{
+            if((getYosan-sum)>0) {
+                textView2.setText(nowSplit[1] + "月の貯金可能額" + (getYosan - sum) + "円");
+            }else if((getYosan-sum)<0){
+                textView2.setText(nowSplit[1] + "月の赤字額" + (getYosan - sum) + "円");
+            }
+        }
+    }
 
-        return view;
+    public static String getNowMonth(){
+        final DateFormat df = new SimpleDateFormat("yyyy-MM");
+        final Date date = new Date(System.currentTimeMillis());
+        return df.format(date);
     }
 
     public void setAdapter(String _date) {

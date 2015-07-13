@@ -9,11 +9,12 @@
 
         <TextView
             android:layout_width="171dp"
-            android:layout_height="64dp"
+            android:layout_height="70dp"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="日付"
+            android:textColor="@color/white"
             android:gravity="center"
-            android:background="@color/blue"
+            android:background="@drawable/button_design"
             android:id="@+id/date" />
 
         <EditText
@@ -29,6 +30,7 @@
             android:layout_height="48dp"
             android:id="@+id/price"
             android:gravity="center"
+            android:inputType="numberSigned"
             android:hint="ここに値段が入る"
             android:layout_gravity="center_horizontal|top"
             android:layout_marginTop="60dp" />

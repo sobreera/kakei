@@ -103,8 +103,7 @@ public class NavigationDrawerFragment extends Fragment {
                 android.R.id.text1,
                 new String[]{
                         "家計簿",
-                        "リスト",
-                        "目標"
+                        "リスト"
                         //getString(R.string.title_section3,
                 }));
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);

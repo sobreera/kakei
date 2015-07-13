@@ -17,6 +17,10 @@ allprojects {
         //GitHubに公開されているレポリトジを追加
         maven {
             url 'https://github.com/powerje/mvn-repo/raw/master/'
+
+        }
+        maven {
+            url 'http://fan-adn.github.io/nendSDK-Android-lib/library'
         }
         jcenter()
     }

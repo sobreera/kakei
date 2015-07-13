@@ -1,7 +1,10 @@
 <!-- A DrawerLayout is intended to be used as the top-level content view using match_parent for both width and height to consume the full space available. -->
-<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:id="@+id/drawer_layout"
-    android:layout_width="match_parent" android:layout_height="match_parent"
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     tools:context=".MainActivity">
 
     <!-- As the main content view, the view below consumes the entire
@@ -14,47 +17,52 @@
             android:layout_height="wrap_content"
             android:id="@+id/editText"
             android:hint="￥"
+            android:inputType="numberSigned"
             android:gravity="center"
             android:layout_gravity="center" />
 
-        <TextView
+        <Button
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="上"
-            android:background="@color/blue"
+            android:textColor="@color/white"
+            android:background="@drawable/button_design"
             android:gravity="center"
             android:id="@+id/up"
             android:layout_gravity="center_vertical|top" />
 
-        <TextView
+        <Button
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="下"
-            android:background="@color/blue"
+            android:textColor="@color/white"
+            android:background="@drawable/button_bottom"
             android:gravity="center"
             android:id="@+id/bottom"
             android:layout_gravity="center_horizontal|bottom" />
 
-        <TextView
+        <Button
             android:layout_width="330dp"
             android:layout_height="70dp"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="右"
-            android:background="@color/blue"
+            android:textColor="@color/white"
+            android:background="@drawable/button_design"
             android:rotation="90"
             android:gravity="center"
             android:id="@+id/right"
             android:layout_gravity="right|center_vertical"
             android:layout_marginRight="-130dp" />
 
-        <TextView
+        <Button
             android:layout_width="330dp"
             android:layout_height="70dp"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="左"
-            android:background="@color/blue"
+            android:textColor="@color/white"
+            android:background="@drawable/button_design"
             android:rotation="270"
             android:gravity="center"
             android:id="@+id/left"

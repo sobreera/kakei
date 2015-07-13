@@ -10,6 +10,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
@@ -66,9 +67,12 @@ public class AccountList extends FragmentActivity {
     public void onResume() {
         super.onResume();
 
+
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+
         defaultPosition = MyFragmentPagerAdapter.MaxPage/2;
         mViewPager.setCurrentItem(defaultPosition, false);
-
     }
 
     //ViewPager 用のAdapter の設定
@@ -129,7 +133,7 @@ public class AccountList extends FragmentActivity {
 
         @Override
         public int getItemPosition(Object object) {
-            return PagerAdapter.POSITION_NONE;
+            return POSITION_NONE;
         }
 
     }

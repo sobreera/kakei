@@ -6,6 +6,8 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.support.v7.app.ActionBarActivity;
@@ -13,6 +15,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.DragEvent;
 import android.view.LayoutInflater;
@@ -22,6 +25,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,10 +50,7 @@ public class MainActivity extends ActionBarActivity
     static String oldDate;
     static String getMonth;
     EditText price;
-    TextView up;
-    TextView right;
-    TextView left;
-    TextView bottom;
+    Button up,right,left,bottom;
     //当たり判定これらで取得しようとしたけどそれぞれにsetOnDragListenerセットした方が楽だったのでお蔵入り
     //Rect rect = new Rect();
     //int x,y;
@@ -60,98 +61,35 @@ public class MainActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         price=(EditText)findViewById(R.id.editText);
+        //price.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED);
         helper=new Database(getApplicationContext());
         db=helper.getWritableDatabase();
-        up=(TextView)findViewById(R.id.up);
-        right=(TextView)findViewById(R.id.right);
-        left=(TextView)findViewById(R.id.left);
-        bottom=(TextView)findViewById(R.id.bottom);
+        up=(Button)findViewById(R.id.up);
+        right=(Button)findViewById(R.id.right);
+        left=(Button)findViewById(R.id.left);
+        bottom=(Button)findViewById(R.id.bottom);
         values = new ContentValues();
 
-        SharedPreferences data = getSharedPreferences("settings", MODE_PRIVATE);
-        SharedPreferences.Editor editor =data.edit();
-        //editor.clear();
-        //editor.commit();
-        String newYosanSt = data.getString("new_yosan", "10000");
-        String oldYosanSt = data.getString("old_yosan", "10000");
-        newYosan = Integer.parseInt(newYosanSt);
-        oldYosan = Integer.parseInt(oldYosanSt);
-        Log.d(null,"oldYosan:"+oldYosan);
-        Log.d(null,"newYosan:"+newYosan);
-        oldDate = data.getString("old_date", null);
-        getMonth = getNowMonth();
-        Log.d(null, "oldDate:" + oldDate + " getMonth:" + getMonth);
-        editor.putString("new_date", getMonth);
-        if(!getMonth.equals(oldDate)){
-            editor.putString("old_yosan",newYosanSt);
-            Log.d(null,"true");
-        }else{
-            Log.d(null,"false");
-        }
-        editor.putString("old_date", getMonth);
-        editor.commit();
-
+        settings();
     }
 
     public void onResume(){
         super.onResume();
-        SharedPreferences data = getSharedPreferences("settings", MODE_PRIVATE);
-        SharedPreferences.Editor editor =data.edit();
-        //editor.clear();
-        //editor.commit();
-        String newYosanSt = data.getString("new_yosan", "10000");
-        String oldYosanSt = data.getString("old_yosan", "10000");
-        newYosan = Integer.parseInt(newYosanSt);
-        oldYosan = Integer.parseInt(oldYosanSt);
-        Log.d(null,"oldYosan:"+oldYosan);
-        Log.d(null,"newYosan:"+newYosan);
-        oldDate = data.getString("old_date", null);
-        getMonth = getNowMonth();
-        Log.d(null, "oldDate:" + oldDate + " getMonth:" + getMonth);
-        editor.putString("new_date", getMonth);
-        if(!getMonth.equals(oldDate)){
-            editor.putString("old_yosan",newYosanSt);
-            Log.d(null,"true");
-        }else{
-            Log.d(null,"false");
-        }
-        editor.putString("old_date", getMonth);
-        editor.commit();
-        Log.d(null, "oldYosan:" + oldYosan);
-        Log.d(null, "newYosan:" + newYosan);
-        String upName = data.getString("up_edit", "食費");
-        String rightName = data.getString("right_edit", "交際費");
-        String leftName = data.getString("left_edit", "娯楽費");
-        String bottomName = data.getString("bottom_edit","買い物費");
-        up.setText(upName);
-        right.setText(rightName);
-        left.setText(leftName);
-        bottom.setText(bottomName);
+        price.getEditableText().clear();
+        settings();
 
-        price.setOnLongClickListener(new View.OnLongClickListener(){
+        price.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public boolean onLongClick(View v){
+            public boolean onLongClick(View v) {
                 //ClipData clipData = ClipData.newPlainText("String",MainActivity.price.getText().toString());
                 //ドラッグ中に表示するイメージのビルダー
-                View.DragShadowBuilder shadow = new View.DragShadowBuilder(v);
+                View.DragShadowBuilder shadow = new MyDragShadowBuilder(v);
                 //ドラッグを開始
-                v.startDrag(null,shadow,v,0);
+                v.startDrag(null, shadow, v, 0);
                 return true;
             }
         });
-
-
-
-        mNavigationDrawerFragment = (NavigationDrawerFragment)
-                getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
-        mTitle = getTitle();
-
-        // Set up the drawer.
-        mNavigationDrawerFragment.setUp(
-                R.id.navigation_drawer,
-                (DrawerLayout) findViewById(R.id.drawer_layout));
 
         up.setOnDragListener(new View.OnDragListener() {
             @Override
@@ -172,10 +110,12 @@ public class MainActivity extends ActionBarActivity
                         return true;
 
                     case DragEvent.ACTION_DROP:
-                        /*んにゃぴ・・・ClipData使い所よくわかんなかったです・・・
+                        /*
+                        ClipData使い所よくわかんなかったです・・・
                         ClipData data = event.getClipData();
                         String texData = String.valueOf(data);
                         */
+
 
                         String date = getNowDate();
                         values.put(Database.DATE, date);
@@ -188,8 +128,12 @@ public class MainActivity extends ActionBarActivity
                                 null,
                                 values
                         );
+
                         Log.d(null, "insert:" + id);
                         Toast.makeText(MainActivity.this, "保存完了:" + date, Toast.LENGTH_SHORT).show();
+                        price.getEditableText().clear();
+
+
                         return true;
 
                     default:
@@ -213,6 +157,7 @@ public class MainActivity extends ActionBarActivity
 
                     case DragEvent.ACTION_DROP:
 
+
                         String date = getNowDate();
                         values.put(Database.DATE, date);
                         values.put(Database.LASTDATE, date);
@@ -226,6 +171,9 @@ public class MainActivity extends ActionBarActivity
                         );
                         Toast.makeText(MainActivity.this, "保存完了:" + date, Toast.LENGTH_SHORT).show();
                         Log.d(null, "insert:" + id);
+                        price.getEditableText().clear();
+
+
                         return true;
 
                     default:
@@ -249,6 +197,7 @@ public class MainActivity extends ActionBarActivity
 
                     case DragEvent.ACTION_DROP:
 
+
                         String date = getNowDate();
                         values.put(Database.DATE, date);
                         values.put(Database.LASTDATE, date);
@@ -262,6 +211,7 @@ public class MainActivity extends ActionBarActivity
                         );
                         Toast.makeText(MainActivity.this, "保存完了:" + date, Toast.LENGTH_SHORT).show();
                         Log.d(null, "insert:" + id);
+                        price.getEditableText().clear();
 
                         return true;
 
@@ -285,6 +235,7 @@ public class MainActivity extends ActionBarActivity
 
                     case DragEvent.ACTION_DROP:
 
+
                         String date = getNowDate();
                         values.put(Database.DATE, date);
                         values.put(Database.LASTDATE, date);
@@ -298,6 +249,9 @@ public class MainActivity extends ActionBarActivity
                         );
                         Toast.makeText(MainActivity.this, "保存完了:" + date, Toast.LENGTH_SHORT).show();
                         Log.d(null, "insert:" + id);
+                        price.getEditableText().clear();
+
+
                         return true;
 
                     default:
@@ -324,6 +278,16 @@ public class MainActivity extends ActionBarActivity
                 return false;
             }
         });
+
+
+        mNavigationDrawerFragment = (NavigationDrawerFragment)
+                getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
+        mTitle = getTitle();
+
+        // Set up the drawer.
+        mNavigationDrawerFragment.setUp(
+                R.id.navigation_drawer,
+                (DrawerLayout) findViewById(R.id.drawer_layout));
     }
 
     /*
@@ -339,6 +303,43 @@ public class MainActivity extends ActionBarActivity
         final DateFormat df = new SimpleDateFormat("yyyy-MM");
         final Date date = new Date(System.currentTimeMillis());
         return df.format(date);
+    }
+
+    public void settings(){
+        SharedPreferences data = getSharedPreferences("settings", MODE_PRIVATE);
+        SharedPreferences.Editor editor =data.edit();
+        //editor.clear();
+        //editor.commit();
+        String newYosanSt = data.getString("new_yosan", "10000");
+        String oldYosanSt = data.getString("old_yosan", "10000");
+        newYosan = Integer.parseInt(newYosanSt);
+        oldYosan = Integer.parseInt(oldYosanSt);
+        Log.d(null,"oldYosan:"+oldYosan);
+        Log.d(null,"newYosan:"+newYosan);
+        oldDate = data.getString("old_date", null);
+        getMonth = getNowMonth();
+        Log.d(null, "oldDate:" + oldDate + " getMonth:" + getMonth);
+        editor.putString("new_date", getMonth);
+        if(!getMonth.equals(oldDate)){
+            editor.putString("old_yosan",newYosanSt);
+            Log.d(null,"true");
+        }else{
+            Log.d(null,"false");
+        }
+        editor.putString("old_date", getMonth);
+        editor.apply();
+
+        Log.d(null, "oldYosan:" + oldYosan);
+        Log.d(null, "newYosan:" + newYosan);
+
+        String upName = data.getString("up_edit", "食費");
+        String rightName = data.getString("right_edit", "交際費");
+        String leftName = data.getString("left_edit", "娯楽費");
+        String bottomName = data.getString("bottom_edit","買い物費");
+        up.setText(upName);
+        right.setText(rightName);
+        left.setText(leftName);
+        bottom.setText(bottomName);
     }
 
     @Override
@@ -390,6 +391,33 @@ public class MainActivity extends ActionBarActivity
 
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private static class MyDragShadowBuilder extends View.DragShadowBuilder {
+        /**
+         * コンストラクタ
+         */
+        public MyDragShadowBuilder(View v) {
+            super(v);
+        }
+
+        /**
+         * ドラッグ中のイメージを描画する際にシステムが呼び出すメソッド
+         */
+        @Override
+        public void onDrawShadow(Canvas canvas)
+        {
+            // ドラッグ対象View
+            View view = getView();
+
+            // Viewのキャプチャを取得する準備
+            view.setDrawingCacheEnabled(true);
+            view.destroyDrawingCache();
+
+            // キャプチャを取得し、キャンバスへ描画する
+            Bitmap bitmap = view.getDrawingCache();
+            canvas.drawBitmap(bitmap, 0f, 0f, null);
+        }
     }
 
     public static class PlaceholderFragment extends Fragment {
