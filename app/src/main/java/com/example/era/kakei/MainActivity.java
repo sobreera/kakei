@@ -51,6 +51,8 @@ public class MainActivity extends ActionBarActivity
     static String getMonth;
     EditText price;
     Button up,right,left,bottom;
+    SharedPreferences data;
+    SharedPreferences.Editor editor;
     //当たり判定これらで取得しようとしたけどそれぞれにsetOnDragListenerセットした方が楽だったのでお蔵入り
     //Rect rect = new Rect();
     //int x,y;
@@ -60,6 +62,20 @@ public class MainActivity extends ActionBarActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        data = getSharedPreferences("Preference Name", MODE_PRIVATE);
+        editor = data.edit();
+
+        if (data.getBoolean("Launched", false)==false) {
+            //プリファレンスの書き変え
+            editor.putBoolean("Launched", true);
+            editor.commit();
+            //初回起動時の処理
+
+        } else {
+            //二回目以降の処理
+
+        }
 
         price=(EditText)findViewById(R.id.editText);
         //price.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED);
@@ -306,8 +322,8 @@ public class MainActivity extends ActionBarActivity
     }
 
     public void settings(){
-        SharedPreferences data = getSharedPreferences("settings", MODE_PRIVATE);
-        SharedPreferences.Editor editor =data.edit();
+        data = getSharedPreferences("settings", MODE_PRIVATE);
+        editor =data.edit();
         //editor.clear();
         //editor.commit();
         String newYosanSt = data.getString("new_yosan", "10000");

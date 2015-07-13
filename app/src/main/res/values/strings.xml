@@ -32,10 +32,8 @@
     <string name="title_activity_account_list">家計簿:リスト</string>
 
     <string name="hello_world">Hello world!</string>
-    <string name="title_activity_data">家計簿:編集</string>
-    <string name="title_activity_graph">家計簿:グラフ</string>
-    <string name="title_activity_sub">家計簿:目標</string>
-    <string name="title_activity_setting">家計簿:設定</string>
+    <string name="title_activity_data">家計坊:編集</string>
+    <string name="title_activity_setting">家計坊:設定</string>
     <string name="title_activity_fragment">FragmentActivity</string>
 
 <!-- TODO: Remove or change this placeholder text -->
