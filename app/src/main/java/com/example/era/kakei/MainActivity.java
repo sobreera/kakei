@@ -1,8 +1,10 @@
 package com.example.era.kakei;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
@@ -15,7 +17,9 @@ import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.text.InputType;
+import android.text.Spanned;
 import android.util.Log;
 import android.view.DragEvent;
 import android.view.LayoutInflater;
@@ -49,7 +53,7 @@ public class MainActivity extends ActionBarActivity
     static int oldYosan;
     static String oldDate;
     static String getMonth;
-    EditText price;
+    TextView price;
     Button up,right,left,bottom;
     SharedPreferences data;
     SharedPreferences.Editor editor;
@@ -63,22 +67,62 @@ public class MainActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        data = getSharedPreferences("Preference Name", MODE_PRIVATE);
+        data = getSharedPreferences("settings", MODE_PRIVATE);
         editor = data.edit();
 
-        if (data.getBoolean("Launched", false)==false) {
-            //プリファレンスの書き変え
-            editor.putBoolean("Launched", true);
-            editor.commit();
-            //初回起動時の処理
-
-        } else {
-            //二回目以降の処理
-
+        if (data.getBoolean("Tutorial",false)==false) {
+            Intent i = new Intent(this,TutorialActivity.class);
+            startActivity(i);
         }
 
-        price=(EditText)findViewById(R.id.editText);
-        //price.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED);
+        price=(TextView)findViewById(R.id.editText);
+        price.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final EditText editText = new EditText(MainActivity.this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setTitle("使用額");
+                builder.setMessage("金額を入力してください");
+                builder.setCancelable(false);
+                builder.setView(editText);
+                editText.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED);
+                // フィルターを作成
+                InputFilter inputFilter = new InputFilter() {
+                    @Override
+                    public CharSequence filter(CharSequence source, int start, int end,
+                                               Spanned dest, int dstart, int dend) {
+                        if (source.toString().matches("^[0-9]+$")) {
+                            return source;
+                        } else {
+                            return "";
+                        }
+                    }
+                };
+                // フィルターの配列を作成
+                InputFilter[] filters = new InputFilter[]{inputFilter};
+                // フィルターの配列をセット
+                editText.setFilters(filters);
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if(editText.length()<1){
+                            price.setText("");
+                        }else {
+                            price.setText(editText.getText().toString());
+                        }
+                    }
+                });
+                builder.setNegativeButton("キャンセル", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                });
+                builder.create().show();
+            }
+
+        });
+
+
         helper=new Database(getApplicationContext());
         db=helper.getWritableDatabase();
         up=(Button)findViewById(R.id.up);
@@ -92,7 +136,6 @@ public class MainActivity extends ActionBarActivity
 
     public void onResume(){
         super.onResume();
-        price.getEditableText().clear();
         settings();
 
         price.setOnLongClickListener(new View.OnLongClickListener() {
@@ -147,8 +190,7 @@ public class MainActivity extends ActionBarActivity
 
                         Log.d(null, "insert:" + id);
                         Toast.makeText(MainActivity.this, "保存完了:" + date, Toast.LENGTH_SHORT).show();
-                        price.getEditableText().clear();
-
+                        price.setText("");
 
                         return true;
 
@@ -187,7 +229,8 @@ public class MainActivity extends ActionBarActivity
                         );
                         Toast.makeText(MainActivity.this, "保存完了:" + date, Toast.LENGTH_SHORT).show();
                         Log.d(null, "insert:" + id);
-                        price.getEditableText().clear();
+                        //price.getEditableText().clear();
+                        price.setText("");
 
 
                         return true;
@@ -227,7 +270,9 @@ public class MainActivity extends ActionBarActivity
                         );
                         Toast.makeText(MainActivity.this, "保存完了:" + date, Toast.LENGTH_SHORT).show();
                         Log.d(null, "insert:" + id);
-                        price.getEditableText().clear();
+                        //price.getEditableText().clear();
+                        price.setText("");
+
 
                         return true;
 
@@ -265,7 +310,8 @@ public class MainActivity extends ActionBarActivity
                         );
                         Toast.makeText(MainActivity.this, "保存完了:" + date, Toast.LENGTH_SHORT).show();
                         Log.d(null, "insert:" + id);
-                        price.getEditableText().clear();
+                        //price.getEditableText().clear();
+                        price.setText("");
 
 
                         return true;

@@ -34,8 +34,35 @@
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_data">家計坊:編集</string>
     <string name="title_activity_setting">家計坊:設定</string>
+    <string name="title_activity_graph">a</string>
     <string name="title_activity_fragment">FragmentActivity</string>
+
+    <string name="mainTutorial">
+        ・左上の矢印ボタンからメニューが開けます。\n
+        ・右上のボタンから設定画面が開けます。\n
+        ・中心の￥をタッチすると金額入力ができます。
+    </string>
+    <string name="mainTutorial2">
+        ・金額を入力すると￥が金額に置き換わります。\n
+        ・中心の金額を長押ししながら\n
+        　当てはまる費目の上まで運び\n
+        　費目の上で指を離すと金額が登録されます。
+    </string>
+    <string name="listTutorial">
+        ・リスト画面ではその月の予算額と残り予算額が\n
+        　表示されます。\n
+        ・左にスクロールすると過去履歴が表示されます。\n
+        ・リストをタッチすると詳細が表示されます。
+    </string>
+    <string name="dataTutorial">
+        ・詳細画面では費目や値段の変更\n
+        　メモの編集ができます。\n
+        ・編集が完了したら右上のボタンで保存できます。\n
+    </string>
+
+
 
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_tutorial">TutorialActivity</string>
 </resources>

@@ -12,14 +12,16 @@
     <FrameLayout android:id="@+id/container" android:layout_width="match_parent"
         android:layout_height="match_parent" android:background="@color/cloud">
 
-        <EditText
+        <TextView
             android:layout_width="130dp"
             android:layout_height="wrap_content"
             android:id="@+id/editText"
-            android:hint="￥"
-            android:inputType="numberSigned"
+            android:textSize="20sp"
+            android:hint="  ￥  "
             android:gravity="center"
+            android:clickable="true"
             android:layout_gravity="center" />
+        <!--android:inputType="numberSigned"-->
 
         <Button
             android:layout_width="match_parent"

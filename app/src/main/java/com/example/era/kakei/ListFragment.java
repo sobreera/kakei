@@ -147,15 +147,7 @@ public class ListFragment extends Fragment {
         String[] nowSplit = Date.split("-", 0);
         int nowMon = Integer.parseInt(nowSplit[1]);
         nowSplit[1] = String.valueOf(nowMon);
-        if(getYosan==0){
-            getYosan=newYosan;
-        }
 
-        textView.setText(nowSplit[1] + "月の予算額:" + getYosan + "円");
-
-        sum = 0;
-        setAdapter(Date);
-        Log.d(null, "sum2:" + sum);
         String getMonth = getNowMonth();
         getMonth = getMonth.replace("-","0");
         int nowInt = Integer.parseInt(getMonth);
@@ -163,19 +155,33 @@ public class ListFragment extends Fragment {
         String thisMonth = thisSplit[0]+"0"+thisSplit[1];
         int thisInt = Integer.parseInt(thisMonth);
         Log.d(null,"nowInt:"+nowInt+" thisInt:"+thisInt);
+
+        if(getYosan==0 && nowInt<thisInt){
+            getYosan=newYosan;
+        }else if(getYosan==0 && nowInt==thisInt){
+            SharedPreferences data = getActivity().getSharedPreferences("settings", Context.MODE_PRIVATE);
+            getYosan=Integer.parseInt(data.getString("old_yosan","10000"));
+        }
+
+        textView.setText(nowSplit[1] + "月の予算額:" + getYosan + "円");
+
+        sum = 0;
+        setAdapter(Date);
+        Log.d(null, "sum2:" + sum);
+
         if(getMonth.equals(Date)){
             textView2.setText("今月の残り予算" + (getYosan - sum) + "円");
         }else if(nowInt<thisInt){
             if((getYosan-sum)>0) {
                 textView2.setText(nowSplit[1] + "月の貯金予定額" + (getYosan - sum) + "円");
             }else if((getYosan-sum)<0){
-                textView2.setText(nowSplit[1] + "月の赤字額" + (getYosan - sum) + "円");
+                textView2.setText(nowSplit[1] + "月の赤字額" + ((getYosan - sum)*-1) + "円");
             }
         }else{
             if((getYosan-sum)>0) {
                 textView2.setText(nowSplit[1] + "月の貯金可能額" + (getYosan - sum) + "円");
             }else if((getYosan-sum)<0){
-                textView2.setText(nowSplit[1] + "月の赤字額" + (getYosan - sum) + "円");
+                textView2.setText(nowSplit[1] + "月の赤字額" + ((getYosan - sum)*-1) + "円");
             }
         }
     }

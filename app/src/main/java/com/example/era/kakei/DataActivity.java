@@ -95,9 +95,11 @@ public class DataActivity extends ActionBarActivity {
             finish();
         }
 
-        //if (id == R.id.action_settings) {
-        //    return true;
-        //}
+        if (id == R.id.action_settings) {
+            Intent i = new android.content.Intent(this,SettingActivity.class);
+            startActivity(i);
+            return true;
+        }
 
         return super.onOptionsItemSelected(item);
     }
