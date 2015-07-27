@@ -159,7 +159,7 @@ public class MainActivity extends ActionBarActivity
         up.setOnDragListener(new View.OnDragListener() {
             @Override
             public boolean onDrag(View v, DragEvent event) {
-                //final int action = event.getAction();     intでもできることの確認
+                //final int action = event.getAction();    intでもできることの確認
                 switch (event.getAction()) {
                     case DragEvent.ACTION_DRAG_STARTED:
                         //ドラッグ開始時に呼び出し
