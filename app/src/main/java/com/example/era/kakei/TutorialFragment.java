@@ -98,18 +98,18 @@ public class TutorialFragment extends Fragment {
         InputFilter[] filters = new InputFilter[]{inputFilter};
         // フィルターの配列をセット
         editText.setFilters(filters);
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                int edit = Integer.parseInt(editText.getText().toString());
-                if (edit < 1) {
+                if (editText.getText().toString().equals("")) {
                     onDestroy();
+                    getActivity().finish();
                 } else {
                     editor.putString("old_yosan", editText.getText().toString());
                     editor.putString("old_yosan",editText.getText().toString());
-                    editor.putBoolean("Tutorial", true);
                     editor.apply();
                     onDestroy();
+                    getActivity().finish();
                 }
             }
         });

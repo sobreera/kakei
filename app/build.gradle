@@ -5,7 +5,7 @@ android {
     buildToolsVersion "23.0.0 rc2"
 
     defaultConfig {
-        applicationId "com.example.era.kakei"
+        applicationId "com.era.kakeibou"
         minSdkVersion 16
         targetSdkVersion 21
         versionCode 1

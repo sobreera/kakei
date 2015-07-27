@@ -67,10 +67,16 @@ public class MainActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //debug...
+        //Intent j = new Intent(this,GraphActivity.class);
+        //startActivity(j);
+
         data = getSharedPreferences("settings", MODE_PRIVATE);
         editor = data.edit();
 
         if (data.getBoolean("Tutorial",false)==false) {
+            editor.putBoolean("Tutorial",true);
+            editor.apply();
             Intent i = new Intent(this,TutorialActivity.class);
             startActivity(i);
         }
@@ -102,17 +108,17 @@ public class MainActivity extends ActionBarActivity
                 InputFilter[] filters = new InputFilter[]{inputFilter};
                 // フィルターの配列をセット
                 editText.setFilters(filters);
-                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if(editText.length()<1){
+                        if(editText.getText().toString().equals("")){
                             price.setText("");
                         }else {
                             price.setText(editText.getText().toString());
                         }
                     }
                 });
-                builder.setNegativeButton("キャンセル", new DialogInterface.OnClickListener() {
+                builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                     }

@@ -37,6 +37,9 @@
     <string name="title_activity_graph">a</string>
     <string name="title_activity_fragment">FragmentActivity</string>
 
+    <string name="ok">OK</string>
+    <string name="cancel">キャンセル</string>
+
     <string name="mainTutorial">
         ・左上の矢印ボタンからメニューが開けます。\n
         ・右上のボタンから設定画面が開けます。\n
@@ -59,10 +62,11 @@
         　メモの編集ができます。\n
         ・編集が完了したら右上のボタンで保存できます。\n
     </string>
+    <string name="result" formatted="false">赤字額&lt;font color=\"red\"&gt;%s&lt;/font&gt;円</string>
 
 
 
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_tutorial">TutorialActivity</string>
+    <string name="title_activity_tutorial">チュートリアル</string>
 </resources>

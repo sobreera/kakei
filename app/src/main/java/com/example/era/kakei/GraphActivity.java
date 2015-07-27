@@ -1,17 +1,34 @@
 package com.example.era.kakei;
 
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 
 public class GraphActivity extends ActionBarActivity {
+    Cursor c;
+    Database helper;
+    SQLiteDatabase db;
+    int sum;
+    TextView textView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_graph);
+
+        textView=(TextView)findViewById(R.id.textView);
+
+        c=db.rawQuery("select * from myData where datetime(date, 'localtime') < datetime('2011-10-22', 'localtime')",null);
+        while(c.moveToNext()){
+            sum=c.getInt(c.getColumnIndex(Database.PRICE));
+        }
+        textView.setText(sum);
+
 
         //グラフ作成用にActivity作成したもののまだよくわかってないので作っただけ状態
     }

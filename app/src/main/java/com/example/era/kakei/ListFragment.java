@@ -10,6 +10,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -98,7 +99,7 @@ public class ListFragment extends Fragment {
                 builder.setTitle("データの削除");
                 builder.setMessage("このデータを削除してもよろしいですか");
                 builder.setCancelable(false);
-                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         db.delete(
@@ -109,7 +110,7 @@ public class ListFragment extends Fragment {
                         setAdapter(Date);
                     }
                 });
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                     }
@@ -173,15 +174,17 @@ public class ListFragment extends Fragment {
             textView2.setText("今月の残り予算" + (getYosan - sum) + "円");
         }else if(nowInt<thisInt){
             if((getYosan-sum)>0) {
-                textView2.setText(nowSplit[1] + "月の貯金予定額" + (getYosan - sum) + "円");
+                textView2.setText("貯金予定額" + (getYosan - sum) + "円");
             }else if((getYosan-sum)<0){
-                textView2.setText(nowSplit[1] + "月の赤字額" + ((getYosan - sum)*-1) + "円");
+                String tex = String.format(getText(R.string.result).toString(),((getYosan-sum)*-1));
+                textView2.setText(Html.fromHtml(tex));
             }
         }else{
             if((getYosan-sum)>0) {
-                textView2.setText(nowSplit[1] + "月の貯金可能額" + (getYosan - sum) + "円");
+                textView2.setText("貯金可能額" + (getYosan - sum) + "円");
             }else if((getYosan-sum)<0){
-                textView2.setText(nowSplit[1] + "月の赤字額" + ((getYosan - sum)*-1) + "円");
+                String tex = String.format(getText(R.string.result).toString(),((getYosan-sum)*-1));
+                textView2.setText(Html.fromHtml(tex));
             }
         }
     }
