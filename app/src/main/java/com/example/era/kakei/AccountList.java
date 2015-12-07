@@ -16,13 +16,17 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import net.nend.android.NendAdView;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -60,6 +64,19 @@ public class AccountList extends FragmentActivity {
         SharedPreferences data = getSharedPreferences("settings", MODE_PRIVATE);
         newYosanSt = data.getString("new_yosan","10000");
         newYosan = Integer.parseInt(newYosanSt);
+
+
+        LinearLayout rootLayout = (LinearLayout) findViewById(R.id.root);
+        // 1 NendAdView をインスタンス化
+        NendAdView nendAdView = new NendAdView(getApplicationContext(),407896,"1c9d695be3d17a55622722e08e7e6160a8bc028e");
+
+        // 中央下部表示の場合
+        rootLayout.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM);
+        // 2 NendAdView をレイアウトに追加
+        rootLayout.addView(nendAdView, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        // 3 広告の取得を開始
+        nendAdView.loadAd();
+        Log.d("nendAdView:::::::::","load!!!!!!");
     }
 
 
@@ -73,6 +90,16 @@ public class AccountList extends FragmentActivity {
 
         defaultPosition = MyFragmentPagerAdapter.MaxPage/2;
         mViewPager.setCurrentItem(defaultPosition, false);
+
+        LinearLayout rootLayout = (LinearLayout) findViewById(R.id.root);
+        // 1 NendAdView をインスタンス化
+        NendAdView nendAdView = new NendAdView(getApplicationContext(),407896,"1c9d695be3d17a55622722e08e7e6160a8bc028e");
+
+        // 中央下部表示の場合
+        rootLayout.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM);
+        // 2 NendAdView をレイアウトに追加
+        rootLayout.addView(nendAdView, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        // 3 広告の取得を開始
     }
 
     //ViewPager 用のAdapter の設定

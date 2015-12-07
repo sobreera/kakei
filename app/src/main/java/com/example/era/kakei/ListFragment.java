@@ -121,7 +121,6 @@ public class ListFragment extends Fragment {
         });
 
 
-
         return view;
     }
 

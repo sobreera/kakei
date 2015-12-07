@@ -2,7 +2,6 @@ package com.example.era.kakei;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.ClipData;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -10,8 +9,6 @@ import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Rect;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
@@ -25,7 +22,6 @@ import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
@@ -36,12 +32,11 @@ import android.widget.Toast;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
 
 public class MainActivity extends ActionBarActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks,View.OnDragListener {
 
     private NavigationDrawerFragment mNavigationDrawerFragment;
     private CharSequence mTitle;
@@ -57,9 +52,6 @@ public class MainActivity extends ActionBarActivity
     Button up,right,left,bottom;
     SharedPreferences data;
     SharedPreferences.Editor editor;
-    //当たり判定これらで取得しようとしたけどそれぞれにsetOnDragListenerセットした方が楽だったのでお蔵入り
-    //Rect rect = new Rect();
-    //int x,y;
 
 
     @Override
@@ -67,14 +59,11 @@ public class MainActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //debug...
-        //Intent j = new Intent(this,GraphActivity.class);
-        //startActivity(j);
 
         data = getSharedPreferences("settings", MODE_PRIVATE);
         editor = data.edit();
 
-        if (data.getBoolean("Tutorial",false)==false) {
+        if (!data.getBoolean("Tutorial",false)) {
             editor.putBoolean("Tutorial",true);
             editor.apply();
             Intent i = new Intent(this,TutorialActivity.class);
@@ -156,197 +145,10 @@ public class MainActivity extends ActionBarActivity
             }
         });
 
-        up.setOnDragListener(new View.OnDragListener() {
-            @Override
-            public boolean onDrag(View v, DragEvent event) {
-                //final int action = event.getAction();    intでもできることの確認
-                switch (event.getAction()) {
-                    case DragEvent.ACTION_DRAG_STARTED:
-                        //ドラッグ開始時に呼び出し
-                    case DragEvent.ACTION_DRAG_ENDED:
-                        //ドラッグ終了時に呼び出し
-                    case DragEvent.ACTION_DRAG_ENTERED:
-                        //ドラッグ開始直後に呼び出し
-                    case DragEvent.ACTION_DRAG_EXITED:
-                        //ドラッグ終了直前に呼び出し
-                        return true;
-                    case DragEvent.ACTION_DRAG_LOCATION:
-                        //ドラッグ中に呼び出し
-                        return true;
-
-                    case DragEvent.ACTION_DROP:
-                        /*
-                        ClipData使い所よくわかんなかったです・・・
-                        ClipData data = event.getClipData();
-                        String texData = String.valueOf(data);
-                        */
-
-
-                        String date = getNowDate();
-                        values.put(Database.DATE, date);
-                        values.put(Database.LASTDATE, date);
-                        values.put(Database.CATEGORY, up.getText().toString());
-                        values.put(Database.PRICE, price.getText().toString());
-                        values.put(Database.YOSAN, oldYosan);
-                        long id = db.insert(
-                                Database.TABLE,
-                                null,
-                                values
-                        );
-
-                        Log.d(null, "insert:" + id);
-                        Toast.makeText(MainActivity.this, "保存完了:" + date, Toast.LENGTH_SHORT).show();
-                        price.setText("");
-
-                        return true;
-
-                    default:
-                        break;
-                }
-
-                return false;
-            }
-        });
-
-        right.setOnDragListener(new View.OnDragListener() {
-            @Override
-            public boolean onDrag(View v, DragEvent event) {
-                switch (event.getAction()) {
-                    case DragEvent.ACTION_DRAG_STARTED:
-                    case DragEvent.ACTION_DRAG_ENTERED:
-                    case DragEvent.ACTION_DRAG_EXITED:
-                        return true;
-                    case DragEvent.ACTION_DRAG_LOCATION:
-                        return true;
-
-                    case DragEvent.ACTION_DROP:
-
-
-                        String date = getNowDate();
-                        values.put(Database.DATE, date);
-                        values.put(Database.LASTDATE, date);
-                        values.put(Database.CATEGORY, right.getText().toString());
-                        values.put(Database.PRICE, price.getText().toString());
-                        values.put(Database.YOSAN, oldYosan);
-                        long id = db.insert(
-                                Database.TABLE,
-                                null,
-                                values
-                        );
-                        Toast.makeText(MainActivity.this, "保存完了:" + date, Toast.LENGTH_SHORT).show();
-                        Log.d(null, "insert:" + id);
-                        //price.getEditableText().clear();
-                        price.setText("");
-
-
-                        return true;
-
-                    default:
-                        break;
-                }
-
-                return false;
-            }
-        });
-
-        left.setOnDragListener(new View.OnDragListener() {
-            @Override
-            public boolean onDrag(View v, DragEvent event) {
-                switch (event.getAction()) {
-                    case DragEvent.ACTION_DRAG_STARTED:
-                    case DragEvent.ACTION_DRAG_ENTERED:
-                    case DragEvent.ACTION_DRAG_EXITED:
-                        return true;
-                    case DragEvent.ACTION_DRAG_LOCATION:
-                        return true;
-
-                    case DragEvent.ACTION_DROP:
-
-
-                        String date = getNowDate();
-                        values.put(Database.DATE, date);
-                        values.put(Database.LASTDATE, date);
-                        values.put(Database.CATEGORY, left.getText().toString());
-                        values.put(Database.PRICE, price.getText().toString());
-                        values.put(Database.YOSAN, oldYosan);
-                        long id = db.insert(
-                                Database.TABLE,
-                                null,
-                                values
-                        );
-                        Toast.makeText(MainActivity.this, "保存完了:" + date, Toast.LENGTH_SHORT).show();
-                        Log.d(null, "insert:" + id);
-                        //price.getEditableText().clear();
-                        price.setText("");
-
-
-                        return true;
-
-                    default:
-                        break;
-                }
-
-                return false;
-            }
-        });
-
-        bottom.setOnDragListener(new View.OnDragListener() {
-            @Override
-            public boolean onDrag(View v, DragEvent event) {
-                switch (event.getAction()) {
-                    case DragEvent.ACTION_DRAG_STARTED:
-                    case DragEvent.ACTION_DRAG_ENTERED:
-                    case DragEvent.ACTION_DRAG_LOCATION:
-                    case DragEvent.ACTION_DRAG_EXITED:
-                        return true;
-
-                    case DragEvent.ACTION_DROP:
-
-
-                        String date = getNowDate();
-                        values.put(Database.DATE, date);
-                        values.put(Database.LASTDATE, date);
-                        values.put(Database.CATEGORY, bottom.getText().toString());
-                        values.put(Database.PRICE, price.getText().toString());
-                        values.put(Database.YOSAN, oldYosan);
-                        long id = db.insert(
-                                Database.TABLE,
-                                null,
-                                values
-                        );
-                        Toast.makeText(MainActivity.this, "保存完了:" + date, Toast.LENGTH_SHORT).show();
-                        Log.d(null, "insert:" + id);
-                        //price.getEditableText().clear();
-                        price.setText("");
-
-
-                        return true;
-
-                    default:
-                        break;
-                }
-
-                return false;
-            }
-        });
-
-        price.setOnDragListener(new View.OnDragListener() {
-            @Override
-            public boolean onDrag(View v, DragEvent event) {
-                switch (event.getAction()) {
-                    case DragEvent.ACTION_DRAG_STARTED:
-                    case DragEvent.ACTION_DRAG_ENTERED:
-                    case DragEvent.ACTION_DRAG_LOCATION:
-                    case DragEvent.ACTION_DRAG_EXITED:
-                    case DragEvent.ACTION_DROP:
-                        return true;
-                    default:
-                        break;
-                }
-                return false;
-            }
-        });
-
+        up.setOnDragListener(this);
+        right.setOnDragListener(this);
+        left.setOnDragListener(this);
+        bottom.setOnDragListener(this);
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
@@ -525,4 +327,45 @@ public class MainActivity extends ActionBarActivity
         }
     }
 
+
+    @Override
+    public boolean onDrag(View v, DragEvent event) {
+        switch (v.getId()) {
+            case R.id.up:
+                return dragger(up.getText().toString(), event);
+            case R.id.bottom:
+                return dragger(bottom.getText().toString(), event);
+            case R.id.right:
+                return dragger(right.getText().toString(), event);
+            case R.id.left:
+                return dragger(left.getText().toString(), event);
+            default:
+                break;
+        }
+        return false;
+    }
+
+    public boolean dragger(String category,DragEvent event){
+        if (event.getAction()==DragEvent.ACTION_DRAG_ENDED){
+            String date = getNowDate();
+            values.put(Database.DATE, date);
+            values.put(Database.LASTDATE, date);
+            values.put(Database.CATEGORY, category);
+            values.put(Database.PRICE, price.getText().toString());
+            values.put(Database.YOSAN, oldYosan);
+            long id = db.insert(
+                    Database.TABLE,
+                    null,
+                    values
+            );
+
+            Log.d(null, "insert:" + id);
+            Toast.makeText(this, "保存完了:" + date, Toast.LENGTH_SHORT).show();
+            price.setText("");
+            return true;
+        }
+
+        Log.d("DragEvent:::::",""+event.getAction()+"::::ACTIONDROP:::"+DragEvent.ACTION_DRAG_ENDED);
+        return false;
+    }
 }

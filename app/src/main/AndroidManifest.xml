@@ -30,16 +30,8 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".GraphActivity"
-            android:label="@string/title_activity_graph" >
-        </activity>
-        <activity
             android:name=".SettingActivity"
             android:label="@string/title_activity_setting" >
-        </activity>
-        <activity
-            android:name=".FragmentActivity"
-            android:label="@string/title_activity_fragment" >
         </activity>
         <activity
             android:name=".TutorialActivity"
