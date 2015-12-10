@@ -64,19 +64,6 @@ public class AccountList extends FragmentActivity {
         SharedPreferences data = getSharedPreferences("settings", MODE_PRIVATE);
         newYosanSt = data.getString("new_yosan","10000");
         newYosan = Integer.parseInt(newYosanSt);
-
-
-//        LinearLayout rootLayout = (LinearLayout) findViewById(R.id.root);
-//        // 1 NendAdView をインスタンス化
-//        NendAdView nendAdView = new NendAdView(getApplicationContext(),407896,"1c9d695be3d17a55622722e08e7e6160a8bc028e");
-//
-//        // 中央下部表示の場合
-//        rootLayout.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM);
-//        // 2 NendAdView をレイアウトに追加
-//        rootLayout.addView(nendAdView, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-//        // 3 広告の取得を開始
-//        nendAdView.loadAd();
-//        Log.d("nendAdView:::::::::","load!!!!!!");
     }
 
 
@@ -91,15 +78,6 @@ public class AccountList extends FragmentActivity {
         defaultPosition = MyFragmentPagerAdapter.MaxPage/2;
         mViewPager.setCurrentItem(defaultPosition, false);
 
-        LinearLayout rootLayout = (LinearLayout) findViewById(R.id.root);
-        // 1 NendAdView をインスタンス化
-        NendAdView nendAdView = new NendAdView(getApplicationContext(),407896,"1c9d695be3d17a55622722e08e7e6160a8bc028e");
-
-        // 中央下部表示の場合
-        rootLayout.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM);
-        // 2 NendAdView をレイアウトに追加
-        rootLayout.addView(nendAdView, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-        // 3 広告の取得を開始
     }
 
     //ViewPager 用のAdapter の設定

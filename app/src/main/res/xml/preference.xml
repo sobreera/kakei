@@ -26,7 +26,7 @@
         </PreferenceScreen>
 
         <EditTextPreference
-            android:key="new_yosan"
+            android:key="@string/newYosan"
             android:inputType="number"
             android:title="@string/yosan_title"
             android:summary="@string/yosan_summary" />
