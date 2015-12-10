@@ -1,6 +1,5 @@
 package com.example.era.kakei;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
@@ -9,21 +8,19 @@ import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
+import android.support.design.widget.NavigationView;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.text.Spanned;
 import android.util.Log;
 import android.view.DragEvent;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
 import android.widget.Button;
 import android.widget.EditText;
@@ -35,11 +32,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 
-public class MainActivity extends ActionBarActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks,View.OnDragListener {
-
-    private NavigationDrawerFragment mNavigationDrawerFragment;
-    private CharSequence mTitle;
+public class MainActivity extends AppCompatActivity
+        implements View.OnDragListener {
 
     private SQLiteDatabase db;
     private Database helper;
@@ -52,6 +46,9 @@ public class MainActivity extends ActionBarActivity
     Button up,right,left,bottom;
     SharedPreferences data;
     SharedPreferences.Editor editor;
+    NavigationView mNavigationView;
+    DrawerLayout mDrawerLayout;
+    ActionBarDrawerToggle mDrawerToggle;
 
 
     @Override
@@ -103,7 +100,11 @@ public class MainActivity extends ActionBarActivity
                         if(editText.getText().toString().equals("")){
                             price.setText("");
                         }else {
-                            price.setText(editText.getText().toString());
+                            if(Integer.parseInt(editText.getText().toString())!=0) {
+                                price.setText(editText.getText().toString());
+                            }else {
+                                price.setText("");
+                            }
                         }
                     }
                 });
@@ -126,6 +127,36 @@ public class MainActivity extends ActionBarActivity
         bottom=(Button)findViewById(R.id.bottom);
         values = new ContentValues();
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        setSupportActionBar(toolbar);
+        // You were missing this setHomeAsUpIndicator
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_drawer);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
+        mNavigationView = (NavigationView)findViewById(R.id.navigation);
+        mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(MenuItem item) {
+                Intent i;
+                switch (item.getItemId()){
+                    case R.id.home:
+                        break;
+                    case R.id.list:
+                        i = new Intent(getApplicationContext(),AccountList.class);
+                        startActivity(i);
+                        break;
+                    case R.id.setting:
+                        i = new Intent(getApplicationContext(),SettingActivity.class);
+                        startActivity(i);
+                        break;
+                }
+                mDrawerLayout.closeDrawers();
+                return false;
+            }
+        });
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.app_name, R.string.app_name);
+
         settings();
     }
 
@@ -140,7 +171,8 @@ public class MainActivity extends ActionBarActivity
                 //ドラッグ中に表示するイメージのビルダー
                 View.DragShadowBuilder shadow = new MyDragShadowBuilder(v);
                 //ドラッグを開始
-                v.startDrag(null, shadow, v, 0);
+                if (price.getText().toString().equals("") ) return false;
+                else v.startDrag(null, shadow, v, 0);
                 return true;
             }
         });
@@ -150,14 +182,6 @@ public class MainActivity extends ActionBarActivity
         left.setOnDragListener(this);
         bottom.setOnDragListener(this);
 
-        mNavigationDrawerFragment = (NavigationDrawerFragment)
-                getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
-        mTitle = getTitle();
-
-        // Set up the drawer.
-        mNavigationDrawerFragment.setUp(
-                R.id.navigation_drawer,
-                (DrawerLayout) findViewById(R.id.drawer_layout));
     }
 
     /*
@@ -212,53 +236,19 @@ public class MainActivity extends ActionBarActivity
         bottom.setText(bottomName);
     }
 
-    @Override
-    public void onNavigationDrawerItemSelected(int position) {
-        // update the main content by replacing fragments
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
-                .commit();
-    }
-
-    public void onSectionAttached(int number) {
-        switch (number) {
-            case 1:
-                break;
-            case 2:
-                Intent i = new Intent(MainActivity.this,AccountList.class);
-                startActivity(i);
-                break;
-        }
-    }
-
-    public void restoreActionBar() {
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-        actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setTitle(mTitle);
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if (!mNavigationDrawerFragment.isDrawerOpen()) {
-            getMenuInflater().inflate(R.menu.main, menu);
-            restoreActionBar();
-            return true;
-        }
+//        getMenuInflater().inflate(R.menu.main, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()) {
-            case R.id.action_settings:
-                Intent i = new android.content.Intent(this,SettingActivity.class);
-                startActivity(i);
-                return true;
-        }
 
+        if (mDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -290,63 +280,39 @@ public class MainActivity extends ActionBarActivity
         }
     }
 
-    public static class PlaceholderFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
-        private static final String ARG_SECTION_NUMBER = "section_number";
-
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
-        public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment fragment = new PlaceholderFragment();
-            Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            fragment.setArguments(args);
-            return fragment;
-        }
-
-        public PlaceholderFragment() {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            return rootView;
-        }
-
-        @Override
-        public void onAttach(Activity activity) {
-            super.onAttach(activity);
-            ((MainActivity) activity).onSectionAttached(
-                    getArguments().getInt(ARG_SECTION_NUMBER));
-        }
-    }
 
 
     @Override
     public boolean onDrag(View v, DragEvent event) {
-        switch (v.getId()) {
-            case R.id.up:
-                return dragger(up.getText().toString(), event);
-            case R.id.bottom:
-                return dragger(bottom.getText().toString(), event);
-            case R.id.right:
-                return dragger(right.getText().toString(), event);
-            case R.id.left:
-                return dragger(left.getText().toString(), event);
-            default:
-                break;
-        }
-        return false;
+            switch (event.getAction()) {
+                case DragEvent.ACTION_DRAG_STARTED:
+                case DragEvent.ACTION_DRAG_ENTERED:
+                case DragEvent.ACTION_DRAG_EXITED:
+                    break;
+                case DragEvent.ACTION_DROP:
+                    switch (v.getId()){
+                        case R.id.up:
+                            dragger(up.getText().toString());
+                            break;
+                        case R.id.bottom:
+                            dragger(bottom.getText().toString());
+                            break;
+                        case R.id.right:
+                            dragger(right.getText().toString());
+                            break;
+                        case R.id.left:
+                            dragger(left.getText().toString());
+                            break;
+                    }
+                    break;
+                case DragEvent.ACTION_DRAG_ENDED:
+                    break;
+            }
+
+        return true;
     }
 
-    public boolean dragger(String category,DragEvent event){
-        if (event.getAction()==DragEvent.ACTION_DRAG_ENDED){
+    public boolean dragger(String category){
             String date = getNowDate();
             values.put(Database.DATE, date);
             values.put(Database.LASTDATE, date);
@@ -363,9 +329,8 @@ public class MainActivity extends ActionBarActivity
             Toast.makeText(this, "保存完了:" + date, Toast.LENGTH_SHORT).show();
             price.setText("");
             return true;
-        }
 
-        Log.d("DragEvent:::::",""+event.getAction()+"::::ACTIONDROP:::"+DragEvent.ACTION_DRAG_ENDED);
-        return false;
+//        Log.d("DragEvent:::::",""+event.getAction()+"::::ACTIONDROP:::"+DragEvent.ACTION_DRAG_ENDED);
+
     }
 }

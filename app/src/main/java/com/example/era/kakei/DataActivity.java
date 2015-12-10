@@ -4,8 +4,13 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.renderscript.Sampler;
+import android.support.design.widget.NavigationView;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,7 +26,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 
-public class DataActivity extends ActionBarActivity {
+public class DataActivity extends AppCompatActivity {
     private TextView date;
     private EditText category;
     private EditText price;
@@ -31,6 +36,9 @@ public class DataActivity extends ActionBarActivity {
     private SQLiteDatabase db;
     private ContentValues values;
     private String dataId;
+    NavigationView mNavigationView;
+    DrawerLayout mDrawerLayout;
+    ActionBarDrawerToggle mDrawerToggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +53,38 @@ public class DataActivity extends ActionBarActivity {
         helper=new Database(getApplicationContext());
         db=helper.getWritableDatabase();
         values=new ContentValues();
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        // You were missing this setHomeAsUpIndicator
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_drawer);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
+        mNavigationView = (NavigationView)findViewById(R.id.navigation);
+        mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(MenuItem item) {
+                Intent i;
+                switch (item.getItemId()){
+                    case R.id.home:
+                        i = new Intent(getApplicationContext(),MainActivity.class);
+                        startActivity(i);
+                        break;
+                    case R.id.list:
+                        i = new Intent(getApplicationContext(),AccountList.class);
+                        startActivity(i);
+                        break;
+                    case R.id.setting:
+                        i = new Intent(getApplicationContext(),SettingActivity.class);
+                        startActivity(i);
+                        break;
+                }
+                mDrawerLayout.closeDrawers();
+                return false;
+            }
+        });
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.app_name, R.string.app_name);
 
     }
 
@@ -91,13 +131,9 @@ public class DataActivity extends ActionBarActivity {
             Toast.makeText(DataActivity.this,"保存完了:"+date,Toast.LENGTH_SHORT).show();
             finish();
             return true;
-        } else if(id==android.R.id.home){
-            finish();
         }
 
-        if (id == R.id.action_settings) {
-            Intent i = new android.content.Intent(this,SettingActivity.class);
-            startActivity(i);
+        if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
 
