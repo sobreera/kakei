@@ -285,10 +285,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onDrag(View v, DragEvent event) {
             switch (event.getAction()) {
-                case DragEvent.ACTION_DRAG_STARTED:
-                case DragEvent.ACTION_DRAG_ENTERED:
-                case DragEvent.ACTION_DRAG_EXITED:
-                    break;
                 case DragEvent.ACTION_DROP:
                     switch (v.getId()){
                         case R.id.up:
@@ -304,8 +300,7 @@ public class MainActivity extends AppCompatActivity
                             dragger(left.getText().toString());
                             break;
                     }
-                    break;
-                case DragEvent.ACTION_DRAG_ENDED:
+                default:
                     break;
             }
 
