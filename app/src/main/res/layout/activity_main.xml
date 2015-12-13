@@ -36,7 +36,7 @@
                 android:layout_gravity="center" />
             <!--android:inputType="numberSigned"-->
 
-            <Button
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:textAppearance="?android:attr/textAppearanceLarge"
@@ -47,7 +47,7 @@
                 android:id="@+id/up"
                 android:layout_gravity="center_vertical|top" />
 
-            <Button
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:textAppearance="?android:attr/textAppearanceLarge"
@@ -58,32 +58,28 @@
                 android:id="@+id/bottom"
                 android:layout_gravity="center_horizontal|bottom" />
 
-            <Button
-                android:layout_width="330dp"
-                android:layout_height="70dp"
+            <com.example.era.kakei.CustomText
+                android:layout_width="70dp"
+                android:layout_height="300dp"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="右"
                 android:textColor="@color/white"
                 android:background="@drawable/button_design"
-                android:rotation="90"
                 android:gravity="center"
                 android:id="@+id/right"
-                android:layout_gravity="right|center_vertical"
-                android:layout_marginRight="-130dp" />
+                android:layout_gravity="right|center_vertical"/>
 
-            <Button
-                android:layout_width="330dp"
-                android:layout_height="70dp"
+            <com.example.era.kakei.CustomText
+                android:layout_width="70dp"
+                android:layout_height="300dp"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="左"
                 android:textColor="@color/white"
                 android:background="@drawable/button_design"
-                android:rotation="270"
                 android:gravity="center"
                 android:id="@+id/left"
                 android:layout_gravity="left|center_vertical"
-                android:singleLine="false"
-                android:layout_marginLeft="-130dp" />
+                android:singleLine="false" />
 
         </FrameLayout>
 

@@ -21,8 +21,8 @@
         android:id="@+id/textView2"
         android:gravity="center"
         android:layout_gravity="center"
-        android:textSize="30sp"/>
-    <!--android:text="インストール以前の月です"-->
+        android:textSize="30sp"
+        android:text="データが存在しません"/>
 
     <ListView
         android:id="@+id/list_item"

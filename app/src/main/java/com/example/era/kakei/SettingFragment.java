@@ -32,7 +32,7 @@ public class SettingFragment extends PreferenceFragment {
 
     private boolean editChangeBool(Preference preference, Object newValue){
         String input = newValue.toString();
-        if (input != null && Integer.parseInt(input) > 1){
+        if (!input.equals("") && Integer.parseInt(input) > 1){ //返ってくるのは""　空で判定した場合!=null判定式はいらない　というかいらない
             //nullでなく1以上であれば要約を変更する
             preference.setSummary(input);
             return true;

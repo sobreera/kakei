@@ -104,7 +104,7 @@ public class AccountList extends FragmentActivity {
             //取得した日時をbundleでFragment側に渡す
             Bundle bundle = new Bundle();
             bundle.putString("date",Title);
-            bundle.putInt("newYosan", newYosan);
+            bundle.putInt("new_yosan", newYosan);
 
             //Fragmentを作成
             ListFragment fragment = new ListFragment();
@@ -143,35 +143,6 @@ public class AccountList extends FragmentActivity {
 
     }
 
-
-/*
-    public void setAdapter() {
-        arr = new ArrayList<>();
-        String now = getNowDate2();
-        now = now.replace("0", "");
-        String[] nowSplit = now.split("-", 0);
-        if (sort) {
-            c = db.rawQuery("select * from myData where date like '%' || ? || '%' escape '$' order by date asc", new String[]{searchWord});
-        } else {
-            c = db.rawQuery("select * from myData where date like '%' || ? || '%' escape '$' order by date desc", new String[]{searchWord});
-        }
-        while (c.moveToNext()) {
-            String dbDate = nowSplit[1] + "/" + nowSplit[2];
-            String dbCategory = c.getString(c.getColumnIndex(Database.CATEGORY));
-            int dbPrice = c.getInt(c.getColumnIndex(Database.PRICE));
-            sum = sum + dbPrice;
-            Log.d(null, "sum:" + sum);
-            arr.add(dbDate + "　" + dbCategory + ":" + dbPrice + "円");
-        }
-        adapter = new ArrayAdapter<>(
-                getApplicationContext(),
-                R.layout.custom_text_list_item,
-                arr
-        );
-
-        listView.setAdapter(adapter);
-    }
-*/
     public String getNowDate(int targetPosition){
         //日時取得
         Calendar targetDate = (Calendar) currentDate.clone();

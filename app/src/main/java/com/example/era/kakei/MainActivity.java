@@ -22,7 +22,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.support.v4.widget.DrawerLayout;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,7 +42,8 @@ public class MainActivity extends AppCompatActivity
     static String oldDate;
     static String getMonth;
     TextView price;
-    Button up,right,left,bottom;
+    CustomText right,left;
+    TextView up,bottom;
     SharedPreferences data;
     SharedPreferences.Editor editor;
     NavigationView mNavigationView;
@@ -121,10 +121,10 @@ public class MainActivity extends AppCompatActivity
 
         helper=new Database(getApplicationContext());
         db=helper.getWritableDatabase();
-        up=(Button)findViewById(R.id.up);
-        right=(Button)findViewById(R.id.right);
-        left=(Button)findViewById(R.id.left);
-        bottom=(Button)findViewById(R.id.bottom);
+        up=(TextView)findViewById(R.id.up);
+        right=(CustomText)findViewById(R.id.right);
+        left=(CustomText)findViewById(R.id.left);
+        bottom=(TextView)findViewById(R.id.bottom);
         values = new ContentValues();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);

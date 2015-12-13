@@ -108,6 +108,7 @@ public class ListFragment extends Fragment {
                                 new String[]{c.getString(c.getColumnIndex(Database.ID))}
                         );
                         setAdapter(Date);
+                        setGetYosan();
                     }
                 });
                 builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -135,7 +136,7 @@ public class ListFragment extends Fragment {
     public void setGetYosan(){
         Bundle bundle = getArguments();
         final String Date = bundle.getString("date");
-        int newYosan = bundle.getInt("newYosan");
+        int newYosan = bundle.getInt("new_yosan");
 
         sql = "select * from myData where date like '%' || ? || '%' escape '$' order by date desc limit 1";
         searchWord = Date;
@@ -167,11 +168,12 @@ public class ListFragment extends Fragment {
 
         sum = 0;
         setAdapter(Date);
-        Log.d(null, "sum2:" + sum);
 
-        String yosan = (getYosan - sum == 0)?"0":String.valueOf(getYosan-sum); //TODO 要検証:0円ジャストになると何故かデフォルトテキスト
+        String yosan = (getYosan - sum == 0)?"0":String.valueOf(getYosan-sum); //TODO 要検証:日付が月ー日で対比しているのが原因
+        String pageDate = Date.substring(0,7);
+        pageDate = pageDate.replace("-","0");
 
-        if(getMonth.equals(Date)){
+        if(getMonth.equals(pageDate)){
             textView2.setText("今月の残り予算" + yosan + "円");
         }else if(nowInt<thisInt){
             if((getYosan-sum)>0) {
@@ -183,8 +185,8 @@ public class ListFragment extends Fragment {
         }else{
             if((getYosan-sum)>0) {
                 textView2.setText("貯金可能額" + yosan + "円");
-            }else if((getYosan-sum)<0){
-                String tex = String.format(getText(R.string.result).toString(),((getYosan-sum)*-1));
+            }else if((getYosan-sum)<0) {
+                String tex = String.format(getText(R.string.result).toString(), ((getYosan - sum) * -1));
                 textView2.setText(Html.fromHtml(tex));
             }
         }

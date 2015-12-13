@@ -2,7 +2,7 @@ package com.example.era.kakei;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.Gravity;
+import android.util.Log;
 import android.widget.TextView;
 
 /**
@@ -22,5 +22,12 @@ public class CustomText extends TextView {
             parseText += get.charAt(i)+"\n";
         }
         super.setText(parseText, type);
+    }
+
+    @Override
+    public CharSequence getText() {
+        String value = super.getText().toString();
+        value = value.replace("\n","");
+        return value;
     }
 }
